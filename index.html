@@ -10,99 +10,89 @@
 body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: white; height: 100vh; overflow: hidden; }
 .screen { display: none; height: 100vh; flex-direction: column; }
 .screen.active { display: flex; }
-
 #splash { background: linear-gradient(135deg, #667eea, #f093fb); justify-content: center; align-items: center; }
 .logo { font-size: 3rem; font-weight: 900; text-align: center; }
 .logo span { display: block; font-size: 1rem; font-weight: 300; margin-top: 8px; opacity: 0.8; }
 .tagline { font-size: 1.1rem; margin-top: 20px; opacity: 0.9; text-align: center; }
 .btn-start { margin-top: 40px; background: white; color: #667eea; border: none; padding: 16px 50px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
-
 #register { background: #0f0f1a; padding: 20px; overflow-y: auto; }
 .reg-header { text-align: center; padding: 20px 0; }
 .reg-header h2 { font-size: 1.8rem; background: linear-gradient(135deg, #667eea, #f093fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .step { display: none; flex-direction: column; gap: 15px; }
 .step.active { display: flex; }
 .step-label { font-size: 1.1rem; color: #aaa; margin-bottom: 5px; }
-input, textarea, select { background: #1a1a2e; border: 1px solid #333; color: white; padding: 15px; border-radius: 15px; font-size: 1rem; width: 100%; outline: none; }
+input, textarea { background: #1a1a2e; border: 1px solid #333; color: white; padding: 15px; border-radius: 15px; font-size: 1rem; width: 100%; outline: none; }
 input:focus, textarea:focus { border-color: #667eea; }
 .gender-btns { display: flex; gap: 10px; }
 .gender-btn { flex: 1; padding: 15px; background: #1a1a2e; border: 2px solid #333; color: white; border-radius: 15px; font-size: 1rem; cursor: pointer; text-align: center; }
 .gender-btn.selected { border-color: #667eea; background: #667eea22; }
-.photo-upload { background: #1a1a2e; border: 2px dashed #667eea; border-radius: 15px; padding: 40px; text-align: center; cursor: pointer; }
+.photo-upload { background: #1a1a2e; border: 2px dashed #667eea; border-radius: 15px; padding: 30px; text-align: center; cursor: pointer; }
 .btn-next { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; padding: 16px; border-radius: 50px; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; }
 .progress { display: flex; gap: 5px; justify-content: center; margin: 15px 0; }
 .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
 .progress-dot.active { background: #667eea; }
-
 #home { background: #0f0f1a; }
-.home-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #1a1a2e; }
-.home-header h1 { font-size: 1.5rem; background: linear-gradient(135deg, #667eea, #f093fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.home-header { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; background: #1a1a2e; }
+.home-header h1 { font-size: 1.4rem; background: linear-gradient(135deg, #667eea, #f093fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .cards-container { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
 .profile-card { background: #1a1a2e; border-radius: 15px; overflow: hidden; }
-.card-img { width: 100%; height: 120px; object-fit: cover; }
-.card-img-placeholder { width: 100%; height: 120px; background: linear-gradient(135deg, #667eea44, #f093fb44); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-.card-info { padding: 10px; }
-.card-name { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.verified { background: #1d9bf0; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.65rem; }
+.card-img-placeholder { width: 100%; height: 100px; background: linear-gradient(135deg, #667eea44, #f093fb44); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+.card-info { padding: 8px 12px; }
+.card-name { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.verified { background: #1d9bf0; border-radius: 50%; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.6rem; }
 .online-dot { width: 8px; height: 8px; border-radius: 50%; background: #00ff88; display: inline-block; }
 .offline-dot { width: 8px; height: 8px; border-radius: 50%; background: #666; display: inline-block; }
-.card-meta { color: #aaa; font-size: 0.85rem; margin-top: 3px; }
-.card-bio { color: #ccc; font-size: 0.85rem; margin-top: 5px; }
-.card-actions { display: flex; gap: 8px; padding: 10px; padding-top: 0; }
-.action-btn { flex: 1; padding: 10px 5px; border: none; border-radius: 50px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.card-meta { color: #aaa; font-size: 0.8rem; margin-top: 2px; }
+.card-bio { color: #ccc; font-size: 0.8rem; margin-top: 4px; }
+.card-actions { display: flex; gap: 6px; padding: 8px 10px; }
+.action-btn { flex: 1; padding: 9px 4px; border: none; border-radius: 50px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
 .btn-like { background: linear-gradient(135deg, #ff6b9d, #ff8e53); color: white; }
 .btn-skip { background: #2a2a3e; color: #aaa; }
 .btn-msg { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-.btn-report { background: #2a2a3e; color: #ff6b6b; font-size: 0.75rem; }
-
+.btn-report { background: #2a2a3e; color: #ff6b6b; }
 .bottom-nav { display: flex; background: #1a1a2e; border-top: 1px solid #333; }
 .nav-btn { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: #666; font-size: 0.6rem; cursor: pointer; }
 .nav-btn.active { color: #667eea; }
 .nav-btn span:first-child { font-size: 1.2rem; }
-
 #chat { background: #0f0f1a; }
 .chat-header { padding: 12px 15px; background: #1a1a2e; display: flex; align-items: center; gap: 10px; }
-.chat-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-.chat-user-info h3 { font-size: 0.95rem; }
+.chat-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.chat-user-info h3 { font-size: 0.9rem; }
 .chat-user-info p { font-size: 0.75rem; color: #00ff88; }
-.back-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; margin-right: 5px; }
+.back-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; }
 .messages { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 .message { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 0.9rem; line-height: 1.4; }
 .message.sent { background: linear-gradient(135deg, #667eea, #764ba2); align-self: flex-end; border-bottom-right-radius: 4px; }
 .message.received { background: #1a1a2e; align-self: flex-start; border-bottom-left-radius: 4px; }
 .message-time { font-size: 0.65rem; opacity: 0.6; margin-top: 3px; }
-.chat-input { padding: 12px; background: #1a1a2e; display: flex; gap: 8px; align-items: center; }
+.chat-input { padding: 10px; background: #1a1a2e; display: flex; gap: 8px; align-items: center; }
 .chat-input input { flex: 1; background: #0f0f1a; border: 1px solid #333; color: white; padding: 10px 14px; border-radius: 22px; }
-.send-btn { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; width: 42px; height: 42px; border-radius: 50%; font-size: 1.1rem; cursor: pointer; }
-
+.send-btn { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1rem; cursor: pointer; }
 #myprofile { background: #0f0f1a; overflow-y: auto; }
 .profile-header { padding: 20px; text-align: center; }
-.my-avatar { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 3px solid #667eea; overflow: hidden; }
-.my-name { font-size: 1.4rem; font-weight: 700; margin-top: 10px; }
+.my-avatar { width: 85px; height: 85px; border-radius: 50%; margin: 0 auto; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 3px solid #667eea; overflow: hidden; }
+.my-name { font-size: 1.3rem; font-weight: 700; margin-top: 10px; }
 .my-info { color: #aaa; margin-top: 5px; }
-.profile-section { margin: 10px 15px; background: #1a1a2e; border-radius: 15px; padding: 15px; }
-.profile-section h3 { color: #667eea; margin-bottom: 10px; }
-.edit-btn { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; padding: 12px 25px; border-radius: 25px; font-size: 0.9rem; cursor: pointer; margin: 5px; }
-
+.profile-section { margin: 10px 15px; background: #1a1a2e; border-radius: 15px; padding: 12px; }
+.profile-section h3 { color: #667eea; margin-bottom: 8px; }
+.edit-btn { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; padding: 11px 22px; border-radius: 25px; font-size: 0.9rem; cursor: pointer; margin: 5px; }
 #matches-screen { background: #0f0f1a; }
 .matches-header { padding: 15px 20px; background: #1a1a2e; }
 .matches-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 .match-item { background: #1a1a2e; border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-.match-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; overflow: hidden; }
+.match-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
 .match-info { flex: 1; }
 .match-name { font-weight: 600; }
-.match-last { color: #aaa; font-size: 0.82rem; margin-top: 3px; }
-
+.match-last { color: #aaa; font-size: 0.8rem; margin-top: 3px; }
 #likes-screen { background: #0f0f1a; }
 .likes-header { padding: 15px 20px; background: #1a1a2e; }
 .likes-grid { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .like-card { background: #1a1a2e; border-radius: 15px; overflow: hidden; }
-.like-card-img { width: 100%; height: 120px; background: linear-gradient(135deg, #667eea44, #f093fb44); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-.like-card-info { padding: 10px; }
-.like-card-name { font-weight: 600; font-size: 0.9rem; }
-.like-card-meta { color: #aaa; font-size: 0.78rem; }
-.like-back-btn { background: linear-gradient(135deg, #ff6b9d, #ff8e53); border: none; color: white; padding: 7px; border-radius: 18px; width: 100%; margin-top: 7px; font-size: 0.78rem; cursor: pointer; }
-
+.like-card-img { width: 100%; height: 100px; background: linear-gradient(135deg, #667eea44, #f093fb44); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+.like-card-info { padding: 8px; }
+.like-card-name { font-weight: 600; font-size: 0.88rem; }
+.like-card-meta { color: #aaa; font-size: 0.75rem; }
+.like-back-btn { background: linear-gradient(135deg, #ff6b9d, #ff8e53); border: none; color: white; padding: 7px; border-radius: 18px; width: 100%; margin-top: 6px; font-size: 0.75rem; cursor: pointer; }
 .no-content { text-align: center; color: #666; padding: 40px 20px; }
 .no-content div { font-size: 2.5rem; margin-bottom: 12px; }
 </style>
@@ -172,7 +162,7 @@ input:focus, textarea:focus { border-color: #667eea; }
     <h1>💙 Soulify</h1>
     <div style="display:flex;align-items:center;gap:10px">
       <span id="user-mood">😊</span>
-      <span onclick="showScreen('myprofile')" style="cursor:pointer">👤</span>
+      <span onclick="showScreen('myprofile')" style="cursor:pointer;font-size:1.3rem">👤</span>
     </div>
   </div>
   <div class="cards-container" id="cards-container"></div>
@@ -245,7 +235,7 @@ input:focus, textarea:focus { border-color: #667eea; }
   <div class="bottom-nav">
     <button class="nav-btn" onclick="showTab('home')"><span>🔥</span><span>Discover</span></button>
     <button class="nav-btn" onclick="showTab('likes')"><span>❤️</span><span>Likes</span></button>
-    <button class="nav-btn active" onclick="showTab('matches')"><span>💞</span><span>Matches</span></button>
+    <button class="nav-btn active"><span>💞</span><span>Matches</span></button>
     <button class="nav-btn" onclick="showScreen('myprofile')"><span>👤</span><span>Profile</span></button>
   </div>
 </div>
@@ -260,7 +250,7 @@ input:focus, textarea:focus { border-color: #667eea; }
   <div class="likes-grid" id="likes-grid"></div>
   <div class="bottom-nav">
     <button class="nav-btn" onclick="showTab('home')"><span>🔥</span><span>Discover</span></button>
-    <button class="nav-btn active" onclick="showTab('likes')"><span>❤️</span><span>Likes</span></button>
+    <button class="nav-btn active"><span>❤️</span><span>Likes</span></button>
     <button class="nav-btn" onclick="showTab('matches')"><span>💞</span><span>Matches</span></button>
     <button class="nav-btn" onclick="showScreen('myprofile')"><span>👤</span><span>Profile</span></button>
   </div>
@@ -272,29 +262,22 @@ if(tg) { tg.ready(); tg.expand(); }
 
 let currentUser = null;
 let currentChat = null;
-let profiles = [];
 let myLikes = [];
 let myMatches = [];
 let messages = {};
 
 const demoProfiles = [
-  { id:1, name:"Sofia", age:24, gender:"Female", country:"Spain", bio:"Love dancing and traveling! Looking for someone genuine 💃", online:true, verified:false, mood:"😍" },
-  { id:2, name:"Marcus", age:27, gender:"Male", country:"Brazil", bio:"Football lover and chef 🍕 Let's cook something beautiful", online:false, verified:false, mood:"😊" },
-  { id:3, name:"Yuki", age:22, gender:"Female", country:"Japan", bio:"Anime lover, photographer 📸 Looking for real connection", online:true, verified:false, mood:"🥰" },
-  { id:4, name:"Ahmed", age:29, gender:"Male", country:"Egypt", bio:"Engineer by day, poet by night ✍️ Love deep conversations", online:true, verified:false, mood:"😎" },
-  { id:5, name:"Isabella", age:25, gender:"Female", country:"Italy", bio:"Fashion designer ✨ Coffee addict. Looking for my person", online:false, verified:false, mood:"😊" },
+  {id:1,name:"Sofia",age:24,gender:"Female",country:"Spain",bio:"Love dancing and traveling! 💃",online:true,verified:false,mood:"😍"},
+  {id:2,name:"Marcus",age:27,gender:"Male",country:"Brazil",bio:"Football lover and chef 🍕",online:false,verified:false,mood:"😊"},
+  {id:3,name:"Yuki",age:22,gender:"Female",country:"Japan",bio:"Anime lover, photographer 📸",online:true,verified:false,mood:"🥰"},
+  {id:4,name:"Ahmed",age:29,gender:"Male",country:"Egypt",bio:"Engineer by day, poet by night ✍️",online:true,verified:false,mood:"😎"},
+  {id:5,name:"Isabella",age:25,gender:"Female",country:"Italy",bio:"Fashion designer ✨ Coffee addict",online:false,verified:false,mood:"😊"},
 ];
 
 function checkUser() {
   const saved = localStorage.getItem('soulify_user');
-  if(saved) {
-    currentUser = JSON.parse(saved);
-    showScreen('home');
-    loadProfiles();
-    updateMyProfile();
-  } else {
-    showScreen('register');
-  }
+  if(saved) { currentUser = JSON.parse(saved); showScreen('home'); loadProfiles(); updateMyProfile(); }
+  else showScreen('register');
 }
 
 function showScreen(id) {
@@ -303,63 +286,63 @@ function showScreen(id) {
 }
 
 function showTab(tab) {
-  if(tab === 'home') showScreen('home');
-  else if(tab === 'likes') { showScreen('likes-screen'); loadLikes(); }
-  else if(tab === 'matches') { showScreen('matches-screen'); loadMatches(); }
+  if(tab==='home') showScreen('home');
+  else if(tab==='likes') { showScreen('likes-screen'); loadLikes(); }
+  else if(tab==='matches') { showScreen('matches-screen'); loadMatches(); }
 }
 
 function nextStep(step) {
-  if(step === 1 && !document.getElementById('inp-name').value.trim()) { alert('Please enter your name'); return; }
-  if(step === 2) { const age = document.getElementById('inp-age').value; if(!age || age < 18) { alert('You must be 18+'); return; } }
-  if(step === 3 && !window.selectedGender) { alert('Please select your gender'); return; }
-  if(step === 4 && !document.getElementById('inp-country').value.trim()) { alert('Please enter your country'); return; }
+  if(step===1 && !document.getElementById('inp-name').value.trim()) { alert('Please enter your name'); return; }
+  if(step===2) { const a=document.getElementById('inp-age').value; if(!a||a<18){alert('You must be 18+');return;} }
+  if(step===3 && !window.selectedGender) { alert('Please select your gender'); return; }
+  if(step===4 && !document.getElementById('inp-country').value.trim()) { alert('Please enter your country'); return; }
   document.getElementById('step'+step).classList.remove('active');
   document.getElementById('step'+(step+1)).classList.add('active');
-  document.querySelectorAll('.progress-dot').forEach((d,i) => d.classList.toggle('active', i <= step));
+  document.querySelectorAll('.progress-dot').forEach((d,i)=>d.classList.toggle('active',i<=step));
 }
 
-function selectGender(g, el) {
-  window.selectedGender = g;
-  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+function selectGender(g,el) {
+  window.selectedGender=g;
+  document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('selected'));
   el.classList.add('selected');
 }
 
 function previewPhoto(input) {
-  if(input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      document.getElementById('photo-preview').src = e.target.result;
-      document.getElementById('photo-preview').style.display = 'block';
-      document.getElementById('photo-placeholder').style.display = 'none';
-      window.photoData = e.target.result;
+  if(input.files&&input.files[0]) {
+    const r=new FileReader();
+    r.onload=e=>{
+      document.getElementById('photo-preview').src=e.target.result;
+      document.getElementById('photo-preview').style.display='block';
+      document.getElementById('photo-placeholder').style.display='none';
+      window.photoData=e.target.result;
     };
-    reader.readAsDataURL(input.files[0]);
+    r.readAsDataURL(input.files[0]);
   }
 }
 
 function saveProfile() {
-  const tgUser = tg?.initDataUnsafe?.user;
-  currentUser = {
-    id: tgUser?.id || Date.now(),
-    name: document.getElementById('inp-name').value.trim(),
-    age: parseInt(document.getElementById('inp-age').value),
-    gender: window.selectedGender || 'Other',
-    country: document.getElementById('inp-country').value.trim(),
-    bio: document.getElementById('inp-bio').value.trim(),
-    photo: window.photoData || null,
-    online: true, verified: false, mood: '😊'
+  const tgUser=tg?.initDataUnsafe?.user;
+  currentUser={
+    id:tgUser?.id||Date.now(),
+    name:document.getElementById('inp-name').value.trim(),
+    age:parseInt(document.getElementById('inp-age').value),
+    gender:window.selectedGender||'Other',
+    country:document.getElementById('inp-country').value.trim(),
+    bio:document.getElementById('inp-bio').value.trim(),
+    photo:window.photoData||null,
+    online:true,verified:false,mood:'😊'
   };
-  localStorage.setItem('soulify_user', JSON.stringify(currentUser));
+  localStorage.setItem('soulify_user',JSON.stringify(currentUser));
   showScreen('home');
   loadProfiles();
   updateMyProfile();
 }
 
 function loadProfiles() {
-  profiles = demoProfiles.filter(p => p.id !== currentUser?.id);
-  const container = document.getElementById('cards-container');
-  if(!profiles.length) { container.innerHTML = '<div class="no-content"><div>💔</div>No profiles right now!</div>'; return; }
-  container.innerHTML = profiles.map(p => `
+  const container=document.getElementById('cards-container');
+  const profiles=demoProfiles.filter(p=>p.id!==currentUser?.id);
+  if(!profiles.length){container.innerHTML='<div class="no-content"><div>💔</div>No profiles right now!</div>';return;}
+  container.innerHTML=profiles.map(p=>`
     <div class="profile-card" id="card-${p.id}">
       <div class="card-img-placeholder">${p.gender==='Female'?'👩':'👨'}</div>
       <div class="card-info">
@@ -375,32 +358,32 @@ function loadProfiles() {
         <button class="action-btn btn-like" onclick="likeProfile(${p.id})">❤️ Like</button>
         <button class="action-btn btn-skip" onclick="skipProfile(${p.id})">⏭ Skip</button>
         <button class="action-btn btn-msg" onclick="openChat(${p.id})">💬 Chat</button>
-        <button class="action-btn btn-report" onclick="reportUser(${p.id})">🚩</button>
+        <button class="action-btn btn-report" onclick="alert('Reported!')">🚩</button>
       </div>
     </div>
   `).join('');
 }
 
 function likeProfile(id) {
-  const card = document.getElementById('card-'+id);
-  const profile = profiles.find(p => p.id === id);
+  const card=document.getElementById('card-'+id);
+  const profile=demoProfiles.find(p=>p.id===id);
   if(!myLikes.includes(id)) {
     myLikes.push(id);
-    if(Math.random() > 0.5) {
+    if(Math.random()>0.5) {
       myMatches.push(id);
-      card.style.border = '2px solid #667eea';
-      setTimeout(() => { card.remove(); showMatchPopup(profile); }, 500);
+      card.style.border='2px solid #667eea';
+      setTimeout(()=>{card.remove();showMatchPopup(profile);},500);
     } else {
-      card.style.border = '2px solid #ff6b9d';
-      setTimeout(() => card.remove(), 500);
+      card.style.border='2px solid #ff6b9d';
+      setTimeout(()=>card.remove(),500);
     }
   }
 }
 
 function showMatchPopup(profile) {
-  const popup = document.createElement('div');
-  popup.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:30px';
-  popup.innerHTML = `
+  const popup=document.createElement('div');
+  popup.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:30px';
+  popup.innerHTML=`
     <div style="font-size:4rem">🎉</div>
     <h2 style="font-size:2rem;background:linear-gradient(135deg,#667eea,#f093fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:15px 0">It's a Match!</h2>
     <p style="color:#aaa;margin-bottom:25px">You and ${profile.name} liked each other!</p>
@@ -411,56 +394,53 @@ function showMatchPopup(profile) {
 }
 
 function skipProfile(id) {
-  const card = document.getElementById('card-'+id);
-  card.style.opacity = '0.3';
-  setTimeout(() => card.remove(), 300);
+  const card=document.getElementById('card-'+id);
+  card.style.opacity='0.3';
+  setTimeout(()=>card.remove(),300);
 }
 
 function openChat(id) {
-  const profile = demoProfiles.find(p => p.id === id);
+  const profile=demoProfiles.find(p=>p.id===id);
   if(!profile) return;
-  currentChat = profile;
-  document.getElementById('chat-name').textContent = profile.name;
-  document.getElementById('chat-status').textContent = profile.online ? '🟢 Online' : '⚫ Offline';
-  document.getElementById('chat-avatar').textContent = profile.gender === 'Female' ? '👩' : '👨';
-  if(!messages[id]) messages[id] = [];
+  currentChat=profile;
+  document.getElementById('chat-name').textContent=profile.name;
+  document.getElementById('chat-status').textContent=profile.online?'🟢 Online':'⚫ Offline';
+  document.getElementById('chat-avatar').textContent=profile.gender==='Female'?'👩':'👨';
+  if(!messages[id]) messages[id]=[];
   renderMessages(id);
   showScreen('chat');
 }
 
 function renderMessages(id) {
-  const container = document.getElementById('messages');
-  const msgs = messages[id] || [];
-  if(!msgs.length) { container.innerHTML = `<div class="no-content"><div>💬</div>Say hi to ${currentChat?.name}!</div>`; return; }
-  container.innerHTML = msgs.map(m => `
-    <div class="message ${m.sent?'sent':'received'}">${m.text}<div class="message-time">${m.time}</div></div>
-  `).join('');
-  container.scrollTop = container.scrollHeight;
+  const container=document.getElementById('messages');
+  const msgs=messages[id]||[];
+  if(!msgs.length){container.innerHTML=`<div class="no-content"><div>💬</div>Say hi to ${currentChat?.name}!</div>`;return;}
+  container.innerHTML=msgs.map(m=>`<div class="message ${m.sent?'sent':'received'}">${m.text}<div class="message-time">${m.time}</div></div>`).join('');
+  container.scrollTop=container.scrollHeight;
 }
 
 function sendMessage() {
-  const input = document.getElementById('msg-input');
-  const text = input.value.trim();
-  if(!text || !currentChat) return;
-  const id = currentChat.id;
-  if(!messages[id]) messages[id] = [];
-  const time = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  messages[id].push({ text, sent: true, time });
-  input.value = '';
+  const input=document.getElementById('msg-input');
+  const text=input.value.trim();
+  if(!text||!currentChat) return;
+  const id=currentChat.id;
+  if(!messages[id]) messages[id]=[];
+  const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  messages[id].push({text,sent:true,time});
+  input.value='';
   renderMessages(id);
-  setTimeout(() => {
-    const replies = ["That's so sweet! 😊","Tell me more about yourself!","Haha I love that! 😂","You seem really interesting 💙","I was thinking the same!","Where are you from? 🌍"];
-    messages[id].push({ text: replies[Math.floor(Math.random()*replies.length)], sent: false, time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) });
+  setTimeout(()=>{
+    const replies=["That's so sweet! 😊","Tell me more!","Haha I love that! 😂","You seem interesting 💙","Same here!","Where are you from? 🌍"];
+    messages[id].push({text:replies[Math.floor(Math.random()*replies.length)],sent:false,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
     renderMessages(id);
-  }, 1500);
+  },1500);
 }
 
 function endChat() { if(confirm('End this chat?')) showScreen('home'); }
 
 function loadLikes() {
-  const grid = document.getElementById('likes-grid');
-  const liked = demoProfiles.slice(0,4);
-  grid.innerHTML = liked.map(p => `
+  const grid=document.getElementById('likes-grid');
+  grid.innerHTML=demoProfiles.slice(0,4).map(p=>`
     <div class="like-card">
       <div class="like-card-img">${p.gender==='Female'?'👩':'👨'}</div>
       <div class="like-card-info">
@@ -473,10 +453,10 @@ function loadLikes() {
 }
 
 function loadMatches() {
-  const list = document.getElementById('matches-list');
-  const matched = demoProfiles.filter(p => myMatches.includes(p.id));
-  if(!matched.length) { list.innerHTML = '<div class="no-content"><div>💞</div>No matches yet. Keep liking!</div>'; return; }
-  list.innerHTML = matched.map(p => `
+  const list=document.getElementById('matches-list');
+  const matched=demoProfiles.filter(p=>myMatches.includes(p.id));
+  if(!matched.length){list.innerHTML='<div class="no-content"><div>💞</div>No matches yet!</div>';return;}
+  list.innerHTML=matched.map(p=>`
     <div class="match-item" onclick="openChat(${p.id})">
       <div class="match-avatar">${p.gender==='Female'?'👩':'👨'}</div>
       <div class="match-info">
@@ -490,40 +470,32 @@ function loadMatches() {
 
 function updateMyProfile() {
   if(!currentUser) return;
-  document.getElementById('my-name').textContent = currentUser.name;
-  document.getElementById('my-info').textContent = currentUser.age + ' • ' + currentUser.country;
-  document.getElementById('my-bio').textContent = currentUser.bio || 'No bio yet';
-  document.getElementById('user-mood').textContent = currentUser.mood || '😊';
-  if(currentUser.photo) {
-    document.getElementById('my-avatar').innerHTML = `<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover">`;
-  }
+  document.getElementById('my-name').textContent=currentUser.name;
+  document.getElementById('my-info').textContent=currentUser.age+' • '+currentUser.country;
+  document.getElementById('my-bio').textContent=currentUser.bio||'No bio yet';
+  document.getElementById('user-mood').textContent=currentUser.mood||'😊';
+  if(currentUser.photo) document.getElementById('my-avatar').innerHTML=`<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover">`;
 }
 
 function setMood(mood) {
-  if(currentUser) {
-    currentUser.mood = mood;
-    localStorage.setItem('soulify_user', JSON.stringify(currentUser));
-    document.getElementById('user-mood').textContent = mood;
-  }
+  if(currentUser){currentUser.mood=mood;localStorage.setItem('soulify_user',JSON.stringify(currentUser));document.getElementById('user-mood').textContent=mood;}
 }
 
 function editProfile() {
   showScreen('register');
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
   document.getElementById('step1').classList.add('active');
-  if(currentUser) {
-    document.getElementById('inp-name').value = currentUser.name || '';
-    document.getElementById('inp-age').value = currentUser.age || '';
-    document.getElementById('inp-country').value = currentUser.country || '';
-    document.getElementById('inp-bio').value = currentUser.bio || '';
+  if(currentUser){
+    document.getElementById('inp-name').value=currentUser.name||'';
+    document.getElementById('inp-age').value=currentUser.age||'';
+    document.getElementById('inp-country').value=currentUser.country||'';
+    document.getElementById('inp-bio').value=currentUser.bio||'';
   }
 }
 
-function reportUser(id) { alert('Report submitted. We will review this profile.'); }
-
 function shareApp() {
   if(tg) tg.openTelegramLink('https://t.me/Lovebridge20_bot/Soulify');
-  else { navigator.clipboard?.writeText('https://t.me/Lovebridge20_bot/Soulify'); alert('Link copied! Share Soulify 💙'); }
+  else{navigator.clipboard?.writeText('https://t.me/Lovebridge20_bot/Soulify');alert('Link copied! 💙');}
 }
 </script>
 </body>
