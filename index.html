@@ -1,502 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Soulify 💙</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: white; height: 100vh; overflow: hidden; }
-.screen { display: none; height: 100vh; flex-direction: column; }
-.screen.active { display: flex; }
-#splash { background: linear-gradient(135deg, #667eea, #f093fb); justify-content: center; align-items: center; }
-.logo { font-size: 3rem; font-weight: 900; text-align: center; }
-.logo span { display: block; font-size: 1rem; font-weight: 300; margin-top: 8px; opacity: 0.8; }
-.tagline { font-size: 1.1rem; margin-top: 20px; opacity: 0.9; text-align: center; }
-.btn-start { margin-top: 40px; background: white; color: #667eea; border: none; padding: 16px 50px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
-#register { background: #0f0f1a; padding: 20px; overflow-y: auto; }
-.reg-header { text-align: center; padding: 20px 0; }
-.reg-header h2 { font-size: 1.8rem; background: linear-gradient(135deg, #667eea, #f093fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.step { display: none; flex-direction: column; gap: 15px; }
-.step.active { display: flex; }
-.step-label { font-size: 1.1rem; color: #aaa; margin-bottom: 5px; }
-input, textarea { background: #1a1a2e; border: 1px solid #333; color: white; padding: 15px; border-radius: 15px; font-size: 1rem; width: 100%; outline: none; }
-input:focus, textarea:focus { border-color: #667eea; }
-.gender-btns { display: flex; gap: 10px; }
-.gender-btn { flex: 1; padding: 15px; background: #1a1a2e; border: 2px solid #333; color: white; border-radius: 15px; font-size: 1rem; cursor: pointer; text-align: center; }
-.gender-btn.selected { border-color: #667eea; background: #667eea22; }
-.photo-upload { background: #1a1a2e; border: 2px dashed #667eea; border-radius: 15px; padding: 30px; text-align: center; cursor: pointer; }
-.btn-next { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; padding: 16px; border-radius: 50px; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; }
-.progress { display: flex; gap: 5px; justify-content: center; margin: 15px 0; }
-.progress-dot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
-.progress-dot.active { background: #667eea; }
-#home { background: #0f0f1a; }
-.home-header { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; background: #1a1a2e; }
-.home-header h1 { font-size: 1.4rem; background: linear-gradient(135deg, #667eea, #f093fb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.cards-container { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-.profile-card { background: #1a1a2e; border-radius: 15px; overflow: hidden; }
-.card-img-placeholder { width: 100%; height: 100px; background: linear-gradient(135deg, #667eea44, #f093fb44); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-.card-info { padding: 8px 12px; }
-.card-name { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-.verified { background: #1d9bf0; border-radius: 50%; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.6rem; }
-.online-dot { width: 8px; height: 8px; border-radius: 50%; background: #00ff88; display: inline-block; }
-.offline-dot { width: 8px; height: 8px; border-radius: 50%; background: #666; display: inline-block; }
-.card-meta { color: #aaa; font-size: 0.8rem; margin-top: 2px; }
-.card-bio { color: #ccc; font-size: 0.8rem; margin-top: 4px; }
-.card-actions { display: flex; gap: 6px; padding: 8px 10px; }
-.action-btn { flex: 1; padding: 9px 4px; border: none; border-radius: 50px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-.btn-like { background: linear-gradient(135deg, #ff6b9d, #ff8e53); color: white; }
-.btn-skip { background: #2a2a3e; color: #aaa; }
-.btn-msg { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
-.btn-report { background: #2a2a3e; color: #ff6b6b; }
-.bottom-nav { display: flex; background: #1a1a2e; border-top: 1px solid #333; }
-.nav-btn { flex: 1; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; color: #666; font-size: 0.6rem; cursor: pointer; }
-.nav-btn.active { color: #667eea; }
-.nav-btn span:first-child { font-size: 1.2rem; }
-#chat { background: #0f0f1a; }
-.chat-header { padding: 12px 15px; background: #1a1a2e; display: flex; align-items: center; gap: 10px; }
-.chat-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-.chat-user-info h3 { font-size: 0.9rem; }
-.chat-user-info p { font-size: 0.75rem; color: #00ff88; }
-.back-btn { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; }
-.messages { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-.message { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 0.9rem; line-height: 1.4; }
-.message.sent { background: linear-gradient(135deg, #667eea, #764ba2); align-self: flex-end; border-bottom-right-radius: 4px; }
-.message.received { background: #1a1a2e; align-self: flex-start; border-bottom-left-radius: 4px; }
-.message-time { font-size: 0.65rem; opacity: 0.6; margin-top: 3px; }
-.chat-input { padding: 10px; background: #1a1a2e; display: flex; gap: 8px; align-items: center; }
-.chat-input input { flex: 1; background: #0f0f1a; border: 1px solid #333; color: white; padding: 10px 14px; border-radius: 22px; }
-.send-btn { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1rem; cursor: pointer; }
-#myprofile { background: #0f0f1a; overflow-y: auto; }
-.profile-header { padding: 20px; text-align: center; }
-.my-avatar { width: 85px; height: 85px; border-radius: 50%; margin: 0 auto; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 3px solid #667eea; overflow: hidden; }
-.my-name { font-size: 1.3rem; font-weight: 700; margin-top: 10px; }
-.my-info { color: #aaa; margin-top: 5px; }
-.profile-section { margin: 10px 15px; background: #1a1a2e; border-radius: 15px; padding: 12px; }
-.profile-section h3 { color: #667eea; margin-bottom: 8px; }
-.edit-btn { background: linear-gradient(135deg, #667eea, #f093fb); border: none; color: white; padding: 11px 22px; border-radius: 25px; font-size: 0.9rem; cursor: pointer; margin: 5px; }
-#matches-screen { background: #0f0f1a; }
-.matches-header { padding: 15px 20px; background: #1a1a2e; }
-.matches-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-.match-item { background: #1a1a2e; border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-.match-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #f093fb); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
-.match-info { flex: 1; }
-.match-name { font-weight: 600; }
-.match-last { color: #aaa; font-size: 0.8rem; margin-top: 3px; }
-#likes-screen { background: #0f0f1a; }
-.likes-header { padding: 15px 20px; background: #1a1a2e; }
-.likes-grid { flex: 1; overflow-y: auto; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.like-card { background: #1a1a2e; border-radius: 15px; overflow: hidden; }
-.like-card-img { width: 100%; height: 100px; background: linear-gradient(135deg, #667eea44, #f093fb44); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-.like-card-info { padding: 8px; }
-.like-card-name { font-weight: 600; font-size: 0.88rem; }
-.like-card-meta { color: #aaa; font-size: 0.75rem; }
-.like-back-btn { background: linear-gradient(135deg, #ff6b9d, #ff8e53); border: none; color: white; padding: 7px; border-radius: 18px; width: 100%; margin-top: 6px; font-size: 0.75rem; cursor: pointer; }
-.no-content { text-align: center; color: #666; padding: 40px 20px; }
-.no-content div { font-size: 2.5rem; margin-bottom: 12px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulify Mini App</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0914; color: #ffffff; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* App Header Style */
+        .app-header { background-color: #161224; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #231d3a; }
+        .logo-area { display: flex; align-items: center; gap: 8px; color: #a384ff; font-size: 22px; font-weight: bold; }
+        .header-timer { background: #cf2323; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: bold; display: none; }
+        
+        /* Main Container for Swipe Card */
+        .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; position: relative; }
+        .profile-card { background: linear-gradient(145deg, #251d3a, #1a152b); border-radius: 20px; width: 100%; max-width: 360px; height: 500px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #362b55; }
+        
+        /* Photo Stack Layout */
+        .photo-area { position: relative; flex: 1; background-color: #120e22; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .info-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(11, 9, 20, 0.95)); padding: 20px 15px; }
+        .user-name { font-size: 22px; margin-bottom: 5px; }
+        .user-bio { font-size: 14px; color: #b5aed4; line-height: 1.4; }
+
+        /* Action Buttons Row */
+        .action-row { display: flex; justify-content: space-around; padding: 12px; background-color: #161224; border-top: 1px solid #231d3a; }
+        .action-btn { background: #251d3a; border: 1px solid #3c315e; color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .action-btn:active { transform: scale(0.95); }
+        .like-btn { border-color: #ff477e; color: #ff477e; }
+
+        /* Instant Connect Message Input Box */
+        .instant-chat-box { padding: 12px; background-color: #120e22; display: flex; gap: 8px; border-top: 1px solid #231d3a; }
+        .chat-input { flex: 1; background-color: #1f1933; border: 1px solid #362b55; border-radius: 25px; padding: 12px 18px; color: white; font-size: 14px; outline: none; }
+        .chat-input::placeholder { color: #645a8a; }
+        .send-btn { background: linear-gradient(135deg, #8a4fff, #6122e6); border: none; color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px; }
+
+        /* Bottom Nav Bar layout */
+        .bottom-nav { background-color: #161224; height: 65px; display: flex; border-top: 1px solid #231d3a; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #585075; text-decoration: none; font-size: 11px; gap: 4px; cursor: pointer; }
+        .nav-item.active { color: #a384ff; }
+        .nav-icon { font-size: 20px; }
+
+        /* Advanced Paywall Modal Screen */
+        .paywall-modal { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 9, 20, 0.98); z-index: 100; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+        .close-paywall { align-self: flex-end; color: #645a8a; font-size: 24px; cursor: pointer; margin-bottom: 5px; }
+        .paywall-title { font-size: 22px; color: #ffcd38; margin-bottom: 8px; font-weight: bold; text-align: center; }
+        .paywall-text { color: #b5aed4; margin-bottom: 15px; font-size: 13px; text-align: center; max-width: 300px; }
+        
+        /* Tier Selection Layout */
+        .tier-section { width: 100%; max-width: 320px; margin-bottom: 15px; }
+        .tier-heading { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #a384ff; text-transform: uppercase; letter-spacing: 0.5px; border-left: 3px solid #a384ff; padding-left: 8px; }
+        .links-grid { display: flex; flex-direction: column; gap: 8px; }
+        .payment-link { display: flex; justify-content: space-between; align-items: center; background: #1f1933; border: 1px solid #362b55; color: white; text-decoration: none; padding: 12px 15px; border-radius: 12px; font-size: 13px; font-weight: 500; transition: 0.2s; }
+        .payment-link:active { background: #2b2347; transform: scale(0.98); }
+        .payment-link span.price { color: #ffcd38; font-weight: bold; }
+        
+        /* VIP coloring updates */
+        .vip-heading { color: #ff4b4b; border-left-color: #ff4b4b; }
+        .vip-link { border-color: #551d1d; }
+        .vip-link span.price { color: #ff4b4b; }
+    </style>
 </head>
 <body>
 
-<div class="screen active" id="splash">
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%">
-    <div class="logo">💙 Soulify<span>Find your soul connection</span></div>
-    <p class="tagline">Love has no borders 🌍</p>
-    <button class="btn-start" onclick="checkUser()">Get Started</button>
-  </div>
-</div>
-
-<div class="screen" id="register">
-  <div class="reg-header">
-    <h2>💙 Create Profile</h2>
-    <div class="progress">
-      <div class="progress-dot active" id="dot1"></div>
-      <div class="progress-dot" id="dot2"></div>
-      <div class="progress-dot" id="dot3"></div>
-      <div class="progress-dot" id="dot4"></div>
-      <div class="progress-dot" id="dot5"></div>
+    <!-- Header Section -->
+    <div class="app-header">
+        <div class="logo-area">💜 Soulify</div>
+        <div class="header-timer" id="displayTimer">20:00</div>
     </div>
-  </div>
-  <div style="padding:20px;flex:1;overflow-y:auto">
-    <div class="step active" id="step1">
-      <div class="step-label">What's your name? 👋</div>
-      <input type="text" id="inp-name" placeholder="Your name..." maxlength="30">
-      <button class="btn-next" onclick="nextStep(1)">Continue →</button>
-    </div>
-    <div class="step" id="step2">
-      <div class="step-label">How old are you? 🎂</div>
-      <input type="number" id="inp-age" placeholder="Your age..." min="18" max="99">
-      <button class="btn-next" onclick="nextStep(2)">Continue →</button>
-    </div>
-    <div class="step" id="step3">
-      <div class="step-label">Your gender? 💫</div>
-      <div class="gender-btns">
-        <div class="gender-btn" onclick="selectGender('Male',this)">👨 Male</div>
-        <div class="gender-btn" onclick="selectGender('Female',this)">👩 Female</div>
-        <div class="gender-btn" onclick="selectGender('Other',this)">🌈 Other</div>
-      </div>
-      <button class="btn-next" onclick="nextStep(3)">Continue →</button>
-    </div>
-    <div class="step" id="step4">
-      <div class="step-label">Where are you from? 🌍</div>
-      <input type="text" id="inp-country" placeholder="Your country...">
-      <div class="step-label" style="margin-top:15px">Tell us about you ✨</div>
-      <textarea id="inp-bio" placeholder="Write a short bio..." rows="3" style="resize:none"></textarea>
-      <button class="btn-next" onclick="nextStep(4)">Continue →</button>
-    </div>
-    <div class="step" id="step5">
-      <div class="step-label">Add your photo 📸</div>
-      <div class="photo-upload" onclick="document.getElementById('photo-inp').click()">
-        <img id="photo-preview" style="width:100%;border-radius:15px;max-height:150px;object-fit:cover;display:none">
-        <div id="photo-placeholder">📷<br><br>Tap to upload photo</div>
-      </div>
-      <input type="file" id="photo-inp" accept="image/*" style="display:none" onchange="previewPhoto(this)">
-      <button class="btn-next" onclick="saveProfile()">🚀 Create My Profile!</button>
-    </div>
-  </div>
-</div>
 
-<div class="screen" id="home">
-  <div class="home-header">
-    <h1>💙 Soulify</h1>
-    <div style="display:flex;align-items:center;gap:10px">
-      <span id="user-mood">😊</span>
-      <span onclick="showScreen('myprofile')" style="cursor:pointer;font-size:1.3rem">👤</span>
-    </div>
-  </div>
-  <div class="cards-container" id="cards-container"></div>
-  <div class="bottom-nav">
-    <button class="nav-btn active" onclick="showTab('home')"><span>🔥</span><span>Discover</span></button>
-    <button class="nav-btn" onclick="showTab('likes')"><span>❤️</span><span>Likes</span></button>
-    <button class="nav-btn" onclick="showTab('matches')"><span>💞</span><span>Matches</span></button>
-    <button class="nav-btn" onclick="showScreen('myprofile')"><span>👤</span><span>Profile</span></button>
-  </div>
-</div>
-
-<div class="screen" id="chat">
-  <div class="chat-header">
-    <button class="back-btn" onclick="showScreen('home')">←</button>
-    <div class="chat-avatar" id="chat-avatar">👤</div>
-    <div class="chat-user-info">
-      <h3 id="chat-name">Name</h3>
-      <p id="chat-status">🟢 Online</p>
-    </div>
-    <div style="margin-left:auto">
-      <span onclick="endChat()" style="cursor:pointer;color:#ff6b6b;font-size:0.85rem">✕ End</span>
-    </div>
-  </div>
-  <div class="messages" id="messages"></div>
-  <div class="chat-input">
-    <input type="text" id="msg-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter')sendMessage()">
-    <button class="send-btn" onclick="sendMessage()">➤</button>
-  </div>
-</div>
-
-<div class="screen" id="myprofile">
-  <div style="padding:12px 15px;background:#1a1a2e;display:flex;align-items:center;gap:10px">
-    <button class="back-btn" onclick="showScreen('home')">←</button>
-    <h2>My Profile</h2>
-  </div>
-  <div class="profile-header">
-    <div class="my-avatar" id="my-avatar">👤</div>
-    <div class="my-name" id="my-name">Your Name</div>
-    <div class="my-info" id="my-info">Age • Country</div>
-  </div>
-  <div class="profile-section">
-    <h3>About Me</h3>
-    <p id="my-bio" style="color:#ccc">Your bio here</p>
-  </div>
-  <div class="profile-section">
-    <h3>Mood</h3>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <span onclick="setMood('😊')" style="font-size:1.5rem;cursor:pointer">😊</span>
-      <span onclick="setMood('😍')" style="font-size:1.5rem;cursor:pointer">😍</span>
-      <span onclick="setMood('😎')" style="font-size:1.5rem;cursor:pointer">😎</span>
-      <span onclick="setMood('🥰')" style="font-size:1.5rem;cursor:pointer">🥰</span>
-      <span onclick="setMood('😢')" style="font-size:1.5rem;cursor:pointer">😢</span>
-      <span onclick="setMood('🤔')" style="font-size:1.5rem;cursor:pointer">🤔</span>
-    </div>
-  </div>
-  <div style="padding:15px;text-align:center">
-    <button class="edit-btn" onclick="editProfile()">✏️ Edit Profile</button>
-    <button class="edit-btn" style="background:linear-gradient(135deg,#ff6b6b,#ff8e53)" onclick="shareApp()">🔗 Share Soulify</button>
-  </div>
-</div>
-
-<div class="screen" id="matches-screen">
-  <div class="matches-header">
-    <div style="display:flex;align-items:center;gap:10px">
-      <button class="back-btn" onclick="showTab('home')">←</button>
-      <h2>💞 Matches</h2>
-    </div>
-  </div>
-  <div class="matches-list" id="matches-list"></div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="showTab('home')"><span>🔥</span><span>Discover</span></button>
-    <button class="nav-btn" onclick="showTab('likes')"><span>❤️</span><span>Likes</span></button>
-    <button class="nav-btn active"><span>💞</span><span>Matches</span></button>
-    <button class="nav-btn" onclick="showScreen('myprofile')"><span>👤</span><span>Profile</span></button>
-  </div>
-</div>
-
-<div class="screen" id="likes-screen">
-  <div class="likes-header">
-    <div style="display:flex;align-items:center;gap:10px">
-      <button class="back-btn" onclick="showTab('home')">←</button>
-      <h2>❤️ Who Liked You</h2>
-    </div>
-  </div>
-  <div class="likes-grid" id="likes-grid"></div>
-  <div class="bottom-nav">
-    <button class="nav-btn" onclick="showTab('home')"><span>🔥</span><span>Discover</span></button>
-    <button class="nav-btn active"><span>❤️</span><span>Likes</span></button>
-    <button class="nav-btn" onclick="showTab('matches')"><span>💞</span><span>Matches</span></button>
-    <button class="nav-btn" onclick="showScreen('myprofile')"><span>👤</span><span>Profile</span></button>
-  </div>
-</div>
-
-<script>
-const tg = window.Telegram?.WebApp;
-if(tg) { tg.ready(); tg.expand(); }
-
-let currentUser = null;
-let currentChat = null;
-let myLikes = [];
-let myMatches = [];
-let messages = {};
-
-const demoProfiles = [
-  {id:1,name:"Sofia",age:24,gender:"Female",country:"Spain",bio:"Love dancing and traveling! 💃",online:true,verified:false,mood:"😍"},
-  {id:2,name:"Marcus",age:27,gender:"Male",country:"Brazil",bio:"Football lover and chef 🍕",online:false,verified:false,mood:"😊"},
-  {id:3,name:"Yuki",age:22,gender:"Female",country:"Japan",bio:"Anime lover, photographer 📸",online:true,verified:false,mood:"🥰"},
-  {id:4,name:"Ahmed",age:29,gender:"Male",country:"Egypt",bio:"Engineer by day, poet by night ✍️",online:true,verified:false,mood:"😎"},
-  {id:5,name:"Isabella",age:25,gender:"Female",country:"Italy",bio:"Fashion designer ✨ Coffee addict",online:false,verified:false,mood:"😊"},
-];
-
-function checkUser() {
-  const saved = localStorage.getItem('soulify_user');
-  if(saved) { currentUser = JSON.parse(saved); showScreen('home'); loadProfiles(); updateMyProfile(); }
-  else showScreen('register');
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function showTab(tab) {
-  if(tab==='home') showScreen('home');
-  else if(tab==='likes') { showScreen('likes-screen'); loadLikes(); }
-  else if(tab==='matches') { showScreen('matches-screen'); loadMatches(); }
-}
-
-function nextStep(step) {
-  if(step===1 && !document.getElementById('inp-name').value.trim()) { alert('Please enter your name'); return; }
-  if(step===2) { const a=document.getElementById('inp-age').value; if(!a||a<18){alert('You must be 18+');return;} }
-  if(step===3 && !window.selectedGender) { alert('Please select your gender'); return; }
-  if(step===4 && !document.getElementById('inp-country').value.trim()) { alert('Please enter your country'); return; }
-  document.getElementById('step'+step).classList.remove('active');
-  document.getElementById('step'+(step+1)).classList.add('active');
-  document.querySelectorAll('.progress-dot').forEach((d,i)=>d.classList.toggle('active',i<=step));
-}
-
-function selectGender(g,el) {
-  window.selectedGender=g;
-  document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-function previewPhoto(input) {
-  if(input.files&&input.files[0]) {
-    const r=new FileReader();
-    r.onload=e=>{
-      document.getElementById('photo-preview').src=e.target.result;
-      document.getElementById('photo-preview').style.display='block';
-      document.getElementById('photo-placeholder').style.display='none';
-      window.photoData=e.target.result;
-    };
-    r.readAsDataURL(input.files[0]);
-  }
-}
-
-function saveProfile() {
-  const tgUser=tg?.initDataUnsafe?.user;
-  currentUser={
-    id:tgUser?.id||Date.now(),
-    name:document.getElementById('inp-name').value.trim(),
-    age:parseInt(document.getElementById('inp-age').value),
-    gender:window.selectedGender||'Other',
-    country:document.getElementById('inp-country').value.trim(),
-    bio:document.getElementById('inp-bio').value.trim(),
-    photo:window.photoData||null,
-    online:true,verified:false,mood:'😊'
-  };
-  localStorage.setItem('soulify_user',JSON.stringify(currentUser));
-  showScreen('home');
-  loadProfiles();
-  updateMyProfile();
-}
-
-function loadProfiles() {
-  const container=document.getElementById('cards-container');
-  const profiles=demoProfiles.filter(p=>p.id!==currentUser?.id);
-  if(!profiles.length){container.innerHTML='<div class="no-content"><div>💔</div>No profiles right now!</div>';return;}
-  container.innerHTML=profiles.map(p=>`
-    <div class="profile-card" id="card-${p.id}">
-      <div class="card-img-placeholder">${p.gender==='Female'?'👩':'👨'}</div>
-      <div class="card-info">
-        <div class="card-name">
-          <span class="${p.online?'online-dot':'offline-dot'}"></span>
-          ${p.name}${p.verified?' <span class="verified">✓</span>':''}
-          <span style="margin-left:auto">${p.mood}</span>
+    <!-- Main Dynamic Feed Container -->
+    <div class="main-content">
+        <div class="profile-card" id="activeCard">
+            <div class="photo-area">
+                <div style="font-size: 90px;">👩</div> 
+                <div class="info-overlay">
+                    <h2 class="user-name">Sarah, 24</h2>
+                    <p class="user-bio">Love traveling, music, and finding deep connections. Let's chat instantly!</p>
+                </div>
+            </div>
+            <div class="action-row">
+                <button class="action-btn" onclick="nextProfile()">❌ Pass</button>
+                <button class="action-btn like-btn" onclick="nextProfile()">❤️ Like</button>
+            </div>
+            <div class="instant-chat-box">
+                <input type="text" id="messageInp" class="chat-input" placeholder="Type a message to start chatting...">
+                <button class="send-btn" onclick="startInstantChat()">🚀</button>
+            </div>
         </div>
-        <div class="card-meta">📍 ${p.country} • ${p.age} yrs • ${p.gender}</div>
-        <div class="card-bio">${p.bio}</div>
-      </div>
-      <div class="card-actions">
-        <button class="action-btn btn-like" onclick="likeProfile(${p.id})">❤️ Like</button>
-        <button class="action-btn btn-skip" onclick="skipProfile(${p.id})">⏭ Skip</button>
-        <button class="action-btn btn-msg" onclick="openChat(${p.id})">💬 Chat</button>
-        <button class="action-btn btn-report" onclick="alert('Reported!')">🚩</button>
-      </div>
+
+        <!-- Dynamic Multi-Tier Paywall Screen Modal -->
+        <div class="paywall-modal" id="paywallScreen">
+            <div class="close-paywall" onclick="closePaywallPopup()">✕</div>
+            <div class="paywall-title" id="paywallTitle">⏱️ Action Locked</div>
+            <p class="paywall-text" id="paywallText">Upgrade your plan to unlock permanent matching features, infinite likes, and completely remove restriction windows.</p>
+            
+            <!-- PREMIUM PORTAL STACK -->
+            <div class="tier-section">
+                <div class="tier-heading">⭐ Soulify Premium</div>
+                <div class="links-grid">
+                    <a href="https://selar.com/h3k5rsum22" class="payment-link" target="_blank"><span>Weekly Access</span> <span class="price">₦8,255</span></a>
+                    <a href="https://selar.com/5j6778i289" class="payment-link" target="_blank"><span>Monthly Special</span> <span class="price">₦20,655</span></a>
+                    <a href="https://selar.com/1n67028y14" class="payment-link" target="_blank"><span>3 Months Plan (Save 20%)</span> <span class="price">₦48,220</span></a>
+                </div>
+            </div>
+
+            <!-- VIP PORTAL STACK -->
+            <div class="tier-section">
+                <div class="tier-heading vip-heading">👑 Soulify VIP Elite</div>
+                <div class="links-grid">
+                    <a href="https://ab80462892" class="payment-link vip-link" target="_blank"><span>VIP Weekly Elite</span> <span class="price">₦12,500</span></a>
+                    <a href="https://selar.com/0178gq37o0" class="payment-link vip-link" target="_blank"><span>VIP Monthly Elite</span> <span class="price">₦32,000</span></a>
+                    <a href="https://selar.com/2bf57t8d15" class="payment-link vip-link" target="_blank"><span>VIP 3 Months (Save 35%)</span> <span class="price">₦75,500</span></a>
+                </div>
+            </div>
+        </div>
     </div>
-  `).join('');
-}
 
-function likeProfile(id) {
-  const card=document.getElementById('card-'+id);
-  const profile=demoProfiles.find(p=>p.id===id);
-  if(!myLikes.includes(id)) {
-    myLikes.push(id);
-    if(Math.random()>0.5) {
-      myMatches.push(id);
-      card.style.border='2px solid #667eea';
-      setTimeout(()=>{card.remove();showMatchPopup(profile);},500);
-    } else {
-      card.style.border='2px solid #ff6b9d';
-      setTimeout(()=>card.remove(),500);
-    }
-  }
-}
-
-function showMatchPopup(profile) {
-  const popup=document.createElement('div');
-  popup.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:30px';
-  popup.innerHTML=`
-    <div style="font-size:4rem">🎉</div>
-    <h2 style="font-size:2rem;background:linear-gradient(135deg,#667eea,#f093fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:15px 0">It's a Match!</h2>
-    <p style="color:#aaa;margin-bottom:25px">You and ${profile.name} liked each other!</p>
-    <button onclick="openChat(${profile.id});this.parentElement.remove()" style="background:linear-gradient(135deg,#667eea,#f093fb);border:none;color:white;padding:14px 35px;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;width:80%">💬 Send Message</button>
-    <button onclick="this.parentElement.remove()" style="background:none;border:1px solid #666;color:#aaa;padding:11px 35px;border-radius:50px;font-size:0.9rem;cursor:pointer;width:80%">Keep Browsing</button>
-  `;
-  document.body.appendChild(popup);
-}
-
-function skipProfile(id) {
-  const card=document.getElementById('card-'+id);
-  card.style.opacity='0.3';
-  setTimeout(()=>card.remove(),300);
-}
-
-function openChat(id) {
-  const profile=demoProfiles.find(p=>p.id===id);
-  if(!profile) return;
-  currentChat=profile;
-  document.getElementById('chat-name').textContent=profile.name;
-  document.getElementById('chat-status').textContent=profile.online?'🟢 Online':'⚫ Offline';
-  document.getElementById('chat-avatar').textContent=profile.gender==='Female'?'👩':'👨';
-  if(!messages[id]) messages[id]=[];
-  renderMessages(id);
-  showScreen('chat');
-}
-
-function renderMessages(id) {
-  const container=document.getElementById('messages');
-  const msgs=messages[id]||[];
-  if(!msgs.length){container.innerHTML=`<div class="no-content"><div>💬</div>Say hi to ${currentChat?.name}!</div>`;return;}
-  container.innerHTML=msgs.map(m=>`<div class="message ${m.sent?'sent':'received'}">${m.text}<div class="message-time">${m.time}</div></div>`).join('');
-  container.scrollTop=container.scrollHeight;
-}
-
-function sendMessage() {
-  const input=document.getElementById('msg-input');
-  const text=input.value.trim();
-  if(!text||!currentChat) return;
-  const id=currentChat.id;
-  if(!messages[id]) messages[id]=[];
-  const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  messages[id].push({text,sent:true,time});
-  input.value='';
-  renderMessages(id);
-  setTimeout(()=>{
-    const replies=["That's so sweet! 😊","Tell me more!","Haha I love that! 😂","You seem interesting 💙","Same here!","Where are you from? 🌍"];
-    messages[id].push({text:replies[Math.floor(Math.random()*replies.length)],sent:false,time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
-    renderMessages(id);
-  },1500);
-}
-
-function endChat() { if(confirm('End this chat?')) showScreen('home'); }
-
-function loadLikes() {
-  const grid=document.getElementById('likes-grid');
-  grid.innerHTML=demoProfiles.slice(0,4).map(p=>`
-    <div class="like-card">
-      <div class="like-card-img">${p.gender==='Female'?'👩':'👨'}</div>
-      <div class="like-card-info">
-        <div class="like-card-name">${p.name}</div>
-        <div class="like-card-meta">${p.age} • ${p.country}</div>
-        <button class="like-back-btn" onclick="likeProfile(${p.id})">❤️ Like Back</button>
-      </div>
+    <!-- Footer Menu Bars -->
+    <div class="bottom-nav">
+        <div class="nav-item active"><span class="nav-icon">🔥</span>Discover</div>
+        <div class="nav-item" onclick="triggerPaywallPopup('❤️ Tab Locked', 'Unlock VIP Elite to instantly unblur the profile pictures of users who already swiped right on you!')"><span class="nav-icon">❤️</span>Likes</div>
+        <div class="nav-item" onclick="triggerPaywallPopup('💬 Tab Locked', 'Conversations require an active Match status to preserve. Upgrade to Premium to permanently chat without constraints!')"><span class="nav-icon">💬</span>Matches</div>
+        <div class="nav-item"><span class="nav-icon">👤</span>Profile</div>
     </div>
-  `).join('');
-}
 
-function loadMatches() {
-  const list=document.getElementById('matches-list');
-  const matched=demoProfiles.filter(p=>myMatches.includes(p.id));
-  if(!matched.length){list.innerHTML='<div class="no-content"><div>💞</div>No matches yet!</div>';return;}
-  list.innerHTML=matched.map(p=>`
-    <div class="match-item" onclick="openChat(${p.id})">
-      <div class="match-avatar">${p.gender==='Female'?'👩':'👨'}</div>
-      <div class="match-info">
-        <div class="match-name">${p.name}</div>
-        <div class="match-last">Tap to message 💬</div>
-      </div>
-      <span>${p.online?'🟢':'⚫'}</span>
-    </div>
-  `).join('');
-}
+    <script>
+        let timerInstance;
+        let timeRemaining = 1200; // 20 minutes in seconds
+        let isChatActive = false;
 
-function updateMyProfile() {
-  if(!currentUser) return;
-  document.getElementById('my-name').textContent=currentUser.name;
-  document.getElementById('my-info').textContent=currentUser.age+' • '+currentUser.country;
-  document.getElementById('my-bio').textContent=currentUser.bio||'No bio yet';
-  document.getElementById('user-mood').textContent=currentUser.mood||'😊';
-  if(currentUser.photo) document.getElementById('my-avatar').innerHTML=`<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover">`;
-}
+        function startInstantChat() {
+            let messageText = document.getElementById('messageInp').value;
+            if(messageText.trim() === "") return alert("Please type a message first!");
+            
+            if(!isChatActive) {
+                isChatActive = true;
+                document.getElementById('displayTimer').style.display = 'block';
+                startCountdownTimer();
+            }
+            
+            document.getElementById('messageInp').value = "";
+            alert("Message Sent! Chat window initialized.");
+        }
 
-function setMood(mood) {
-  if(currentUser){currentUser.mood=mood;localStorage.setItem('soulify_user',JSON.stringify(currentUser));document.getElementById('user-mood').textContent=mood;}
-}
+        function startCountdownTimer() {
+            timerInstance = setInterval(() => {
+                if(timeRemaining <= 0) {
+                    clearInterval(timerInstance);
+                    triggerPaywallPopup("⏱️ Time's Up!", "Your 20-minute chat window has locked. Upgrade to Premium or VIP to completely destroy conversation time locks!");
+                    document.getElementById('activeCard').style.opacity = '0.05';
+                } else {
+                    timeRemaining--;
+                    let mins = Math.floor(timeRemaining / 60);
+                    let secs = timeRemaining % 60;
+                    document.getElementById('displayTimer').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                }
+            }, 1000);
+        }
 
-function editProfile() {
-  showScreen('register');
-  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('step1').classList.add('active');
-  if(currentUser){
-    document.getElementById('inp-name').value=currentUser.name||'';
-    document.getElementById('inp-age').value=currentUser.age||'';
-    document.getElementById('inp-country').value=currentUser.country||'';
-    document.getElementById('inp-bio').value=currentUser.bio||'';
-  }
-}
+        function triggerPaywallPopup(title, text) {
+            if(title && text) {
+                document.getElementById('paywallTitle').innerText = title;
+                document.getElementById('paywallText').innerText = text;
+            }
+            document.getElementById('paywallScreen').style.display = 'flex';
+        }
 
-function shareApp() {
-  if(tg) tg.openTelegramLink('https://t.me/Lovebridge20_bot/Soulify');
-  else{navigator.clipboard?.writeText('https://t.me/Lovebridge20_bot/Soulify');alert('Link copied! 💙');}
-}
-</script>
+        function closePaywallPopup() {
+            if(timeRemaining > 0) {
+                document.getElementById('paywallScreen').style.display = 'none';
+            } else {
+                alert("You must select a premium upgrade package to unlock messaging access.");
+            }
+        }
+
+        function nextProfile() {
+            alert("Loading next global profile stack card...");
+        }
+    </script>
 </body>
 </html>
