@@ -39,8 +39,8 @@
         /* Center Content Layouts for Locked Tabs */
         .center-notice { text-align: center; max-width: 300px; }
         .center-icon { font-size: 50px; margin-bottom: 15px; }
-        .center-title { font-size: 20px; margin-bottom: 10px; color: #ffcd38; font-weight: bold; }
-        .center-desc { color: #b5aed4; font-size: 14px; margin-bottom: 20px; line-height: 1.4; }
+        .center-title { font-size: 20px; margin-bottom: 10px; color: #ffcd38; font-weight: bold; text-align: center; }
+        .center-desc { color: #b5aed4; font-size: 14px; margin-bottom: 20px; line-height: 1.4; text-align: center; }
         .view-premium-btn { background: linear-gradient(135deg, #a384ff, #6122e6); color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
         /* Bottom Nav Bar layout */
@@ -73,6 +73,18 @@
         /* Circular Profile Picture Styling */
         .user-avatar-container { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #a384ff; overflow: hidden; cursor: pointer; user-select: none; }
         .user-avatar-img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Form Controls for Profile Editing Panel */
+        .edit-profile-box { background: #1f1933; padding: 15px; border-radius: 12px; border: 1px solid #362b55; margin-top: 15px; width: 100%; }
+        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 12px; color: #b5aed4; font-weight: 500; text-align: left; }
+        .form-control { background: #120e22; border: 1px solid #362b55; border-radius: 8px; padding: 10px; color: white; font-size: 13px; outline: none; }
+        .form-control:focus { border-color: #a384ff; }
+        
+        .flex-row { display: flex; gap: 10px; }
+        .flex-row .form-group { flex: 1; }
+        
+        .logout-btn { background: #26171f; color: #ff4b4b; border: 1px solid #522331; padding: 12px; border-radius: 25px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -136,21 +148,16 @@
 
     <!-- VIEW 4: USER PROFILE SETUP SCREEN -->
     <div class="app-view" id="view-profile">
-        <div class="center-notice" style="width:100%; max-width:340px; text-align: left; background:#161224; padding:20px; border-radius:15px; border:1px solid #231d3a;">
+        <div class="center-notice" id="authenticated-profile-shell" style="width:100%; max-width:340px; text-align: left; background:#161224; padding:20px; border-radius:15px; border:1px solid #231d3a;">
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
-                <!-- REAL IMAGE SOURCE REPLACED THE AVATAR SYSTEM -->
                 <div class="user-avatar-container" onclick="triggerAdminTap()">
-                    <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop" alt="My Profile Photo">
+                    <img id="my-avatar-display" class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop" alt="My Profile Photo">
                 </div>
                 <div>
                     <h3 style="color:white;" id="user-display-title">Alex, 23</h3>
                     <p style="color:#a384ff; font-size:12px; font-weight: 500;" id="user-tier-badge">Tier: Free User</p>
                 </div>
             </div>
-            
-            <p style="color:#b5aed4; font-size:13px; line-height:1.5; margin-bottom:20px;">
-                Manage your personalized preferences, verification badges, and location match parameters here.
-            </p>
 
             <!-- SIMULATION TEST TRIGGER TO BECOME VIP INSTANTLY -->
             <button class="view-premium-btn" style="width:100%; margin-bottom:8px; background:linear-gradient(135deg, #ff4b4b, #cf2323);" onclick="simulateVipUpgrade()">
@@ -159,6 +166,54 @@
             <button class="view-premium-btn" style="width:100%; background:#251d3a; border:1px solid #3c315e;" onclick="triggerPaywallPopup('👑 Status Manager', 'View real store links.')">
                 View Selar Links Portal
             </button>
+
+            <!-- EDIT PROFILE INPUT BLOCK -->
+            <div class="edit-profile-box">
+                <h4 style="color:white; font-size:14px; margin-bottom:12px; border-bottom:1px solid #362b55; padding-bottom:6px;">✏️ Edit Profile Info</h4>
+                
+                <div class="form-group">
+                    <label>Profile Name</label>
+                    <input type="text" id="edit-name" class="form-control" value="Alex">
+                </div>
+
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="edit-age" class="form-control" value="23">
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="edit-gender" class="form-control">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-binary">Non-binary</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" id="edit-country" class="form-control" value="Nigeria">
+                </div>
+
+                <div class="form-group">
+                    <label>Photo Source URL</label>
+                    <input type="text" id="edit-photo" class="form-control" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop">
+                </div>
+
+                <button class="view-premium-btn" style="width:100%; font-size:13px; padding:10px;" onclick="saveProfileChanges()">Save Form Updates</button>
+            </div>
+
+            <!-- LOGOUT SIMULATOR CALL-TO-ACTION -->
+            <button class="logout-btn" onclick="executeAppLogout()">🚪 Log Out Session</button>
+        </div>
+
+        <!-- UN-AUTHENTICATED SYSTEM VIEW WRAPPER -->
+        <div class="center-notice" id="unauthenticated-profile-shell" style="display:none;">
+            <div class="center-icon">🔑</div>
+            <div class="center-title">Session Terminated</div>
+            <div class="center-desc">You have successfully logged out of your dating match engine dashboard.</div>
+            <button class="view-premium-btn" onclick="location.reload()">Re-login Interface</button>
         </div>
     </div>
 
@@ -288,7 +343,6 @@
             }, 1000);
         }
 
-        // Tap circular picture 5 times to reveal hidden admin panel
         function triggerAdminTap() {
             adminTapCount++;
             if(adminTapCount >= 5) {
@@ -301,10 +355,49 @@
             document.getElementById('adminPanel').style.display = 'none';
         }
 
+        // EDIT PROFILE VALIDATION AND EXECUTION ENGINE
+        function saveProfileChanges() {
+            let nameInput = document.getElementById('edit-name').value;
+            let ageInput = document.getElementById('edit-age').value;
+            let photoInput = document.getElementById('edit-photo').value;
+            let countryInput = document.getElementById('edit-country').value;
+
+            // Reject crown or star icons using regular expression check
+            const forbiddenEmojis = /[\u{1F451}\u{2B50}\u{2605}\u{1F31F}\u{2728}]/u; 
+            
+            if (forbiddenEmojis.test(nameInput)) {
+                alert("❌ Validation Error: The Crown (👑) and Star (⭐) emojis are reserved strictly for verified Premium and VIP subscribers. Please remove them to continue.");
+                return;
+            }
+
+            if(nameInput.trim() === "" || ageInput.trim() === "") {
+                alert("Please fill out name and age fields.");
+                return;
+            }
+
+            // Apply updates dynamically onto your active user element layers
+            let currentSuffix = isVipUser ? " 👑" : "";
+            document.getElementById('user-display-title').innerText = `${nameInput}, ${ageInput}${currentSuffix}`;
+            document.getElementById('my-avatar-display').src = photoInput;
+            
+            alert(`Profile details updated! Country set to ${countryInput}.`);
+        }
+
+        // RECONSTRUCT LOGOUT COMMAND LOOPS
+        function executeAppLogout() {
+            if(confirm("Are you sure you want to log out of your profile session?")) {
+                document.getElementById('authenticated-profile-shell').style.display = 'none';
+                document.getElementById('unauthenticated-profile-shell').style.display = 'block';
+                document.getElementById('header-logo').innerText = " Soulify Engine";
+            }
+        }
+
         function simulateVipUpgrade() {
             isVipUser = true;
+            let currentFormName = document.getElementById('edit-name').value;
+            let currentFormAge = document.getElementById('edit-age').value;
             
-            document.getElementById('user-display-title').innerHTML = "Alex, 23 👑";
+            document.getElementById('user-display-title').innerHTML = `${currentFormName}, ${currentFormAge} 👑`;
             document.getElementById('user-tier-badge').innerText = "Tier: VIP Elite Member";
             document.getElementById('header-logo').innerHTML = "👑 Soulify VIP";
             
