@@ -1,67 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Soulify</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #000; color: #fff; height: 100vh; overflow: hidden; }
-        
-        /* Full screen card container */
-        .card-container { position: relative; width: 100%; height: 100vh; }
-        .profile-bg { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Story Bars */
-        .story-bars { position: absolute; top: 15px; left: 10px; right: 10px; display: flex; gap: 5px; z-index: 10; }
-        .bar { height: 3px; flex: 1; background: rgba(255,255,255,0.3); border-radius: 2px; }
-        
-        /* Info Overlay */
-        .info-overlay { position: absolute; bottom: 140px; left: 20px; z-index: 10; }
-        .name-row { font-size: 32px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .verified { color: #2196f3; font-size: 24px; }
-        
-        /* Action Row */
-        .action-row { position: absolute; bottom: 70px; width: 100%; display: flex; justify-content: center; gap: 15px; z-index: 10; }
-        .btn { width: 55px; height: 55px; border-radius: 50%; border: 1px solid #333; background: #111; color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; }
-        .btn:active { transform: scale(0.9); }
-        
-        /* Bottom Navigation */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; background: #000; border-top: 1px solid #222; z-index: 100; cursor: pointer; }
-        .nav-icon { font-size: 24px; color: #555; }
-        .nav-icon.active { color: #fe3c72; }
+        /* Add this to your style section */
+        .page { display: none; height: 100vh; width: 100%; }
+        #discover { display: block; } /* Show discover by default */
     </style>
 </head>
 <body>
 
-<div class="card-container">
-    <div class="story-bars">
-        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <!-- DISCOVER SCREEN -->
+    <div id="discover" class="page">
+        <!-- Your existing card content here -->
     </div>
 
-    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" class="profile-bg">
-    
-    <div class="info-overlay">
-        <div class="name-row">Luna 25 <span class="verified">✓</span></div>
-        <p style="margin-top:5px;">😍 Looking for: Long-term, open to short</p>
+    <!-- MESSAGES SCREEN -->
+    <div id="messages" class="page">
+        <h1 style="color:white; padding: 20px;">Messages Screen</h1>
     </div>
 
-    <div class="action-row">
-        <button class="btn" onclick="alert('Rewinding...')">🔄</button>
-        <button class="btn" style="color:#ff4757;" onclick="alert('Nope!')">✕</button>
-        <button class="btn" style="color:#29b6f6;" onclick="alert('Super Like!')">★</button>
-        <button class="btn" style="color:#2ed573;" onclick="alert('Liked!')">💚</button>
-        <button class="btn" style="color:#b388ff;" onclick="alert('Boost!')">⚡</button>
+    <!-- PROFILE SCREEN -->
+    <div id="profile" class="page">
+        <h1 style="color:white; padding: 20px;">Profile Screen</h1>
     </div>
-</div>
 
-<nav class="bottom-nav">
-    <div class="nav-icon active" onclick="alert('Discover')">🔥</div>
-    <div class="nav-icon" onclick="alert('Search')">🔍</div>
-    <div class="nav-icon" onclick="alert('Top Picks')">✨</div>
-    <div class="nav-icon" onclick="alert('Messages')">💬</div>
-    <div class="nav-icon" onclick="alert('Profile')">👤</div>
-</nav>
+    <!-- NAVIGATION -->
+    <nav class="bottom-nav">
+        <div class="nav-icon" onclick="showPage('discover')">🔥</div>
+        <div class="nav-icon" onclick="alert('Search')">🔍</div>
+        <div class="nav-icon" onclick="alert('Top Picks')">✨</div>
+        <div class="nav-icon" onclick="showPage('messages')">💬</div>
+        <div class="nav-icon" onclick="showPage('profile')">👤</div>
+    </nav>
 
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+            // Show the selected page
+            document.getElementById(pageId).style.display = 'block';
+        }
+    </script>
 </body>
 </html>
