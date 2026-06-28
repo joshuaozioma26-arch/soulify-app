@@ -2,69 +2,379 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soulify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Soulify Premium</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #000; color: #fff; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         
-        /* Pages */
-        .page { display: none; height: 100vh; width: 100%; position: relative; }
-        #discover { display: block; } 
+        body { background-color: #0b0914; color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         
-        /* Header */
-        .header { height: 50px; display: flex; align-items: center; padding: 0 15px; justify-content: space-between; border-bottom: 1px solid #222; }
+        .app-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background-color: #161224; border-bottom: 1px solid #231d3a; position: sticky; top: 0; z-index: 50; }
+        .logo-area { display: flex; align-items: center; gap: 8px; color: #a384ff; font-size: 20px; font-weight: 700; }
         
-        /* Discover Screen Elements */
-        .profile-img { width: 100%; height: 70vh; background: #333; object-fit: cover; }
-        .info-overlay { padding: 15px; }
+        .app-view { display: none; flex-direction: column; padding: 15px; justify-content: flex-start; align-items: center; position: absolute; top: 55px; bottom: 68px; left: 0; right: 0; overflow-y: auto; }
+        .app-view.active-view { display: flex; }
+
+        /* --- ONBOARDING FLOW --- */
+        .progress-container { display: flex; gap: 6px; width: 100%; max-width: 340px; margin-bottom: 25px; }
+        .progress-bar { height: 4px; flex: 1; background-color: #251d3a; border-radius: 2px; }
+        .progress-bar.active { background-color: #a384ff; }
+        .section-title { font-size: 14px; text-transform: uppercase; color: #b5aed4; letter-spacing: 0.5px; margin-bottom: 12px; align-self: flex-start; font-weight: 600; width: 100%; max-width: 340px; }
+        .form-block { background: #161224; border-radius: 16px; padding: 14px 18px; width: 100%; max-width: 340px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #231d3a; }
+        .form-block label { font-size: 15px; color: #ffffff; font-weight: 500; }
+        .pill-toggle { display: flex; background: #0b0914; border-radius: 20px; padding: 2px; border: 1px solid #231d3a; width: 160px; }
+        .pill-btn { flex: 1; border: none; background: transparent; color: #585075; padding: 6px 0; font-size: 13px; font-weight: 600; border-radius: 18px; cursor: pointer; text-align: center; }
+        .pill-btn.active { background: #251d3a; color: #a384ff; border: 1px solid #3c315e; }
+        .premium-input { background: transparent; border: none; color: #a384ff; font-size: 16px; font-weight: 600; text-align: right; outline: none; width: 50%; }
+        .premium-select { background: transparent; border: none; color: #a384ff; font-size: 15px; font-weight: 600; outline: none; text-align: right; cursor: pointer; direction: rtl; }
+        .premium-select option { background-color: #161224; color: white; }
+
+        /* --- DISCOVER FULL CARD DESIGN (Screenshot_20260628_022120) --- */
+        .discover-container { width: 100%; max-width: 380px; height: 100%; max-height: 560px; position: relative; border-radius: 24px; overflow: hidden; border: 1px solid #231d3a; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-photo-bg { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
+        .card-story-lines { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 4px; z-index: 5; }
+        .story-segment { height: 3px; flex: 1; background: rgba(255, 255, 255, 0.3); border-radius: 2px; }
+        .story-segment.active { background: rgba(255, 255, 255, 0.9); }
+        .card-gradient-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: linear-gradient(transparent, rgba(11, 9, 20, 0.95) 85%); z-index: 2; pointer-events: none; }
+        .card-info-content { position: absolute; bottom: 90px; left: 20px; right: 20px; z-index: 3; }
+        .card-identity-row { display: flex; align-items: center; gap: 8px; font-size: 24px; font-weight: 700; color: #ffffff; }
+        .verification-badge { color: #2196F3; font-size: 18px; }
+        .card-status-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 0, 0, 0.6); padding: 6px 12px; border-radius: 20px; margin-top: 10px; font-size: 13px; font-weight: 500; border: 1px solid rgba(255,255,255,0.1); }
         
-        /* Actions & Nav */
-        .action-row { display: flex; justify-content: center; gap: 15px; padding: 10px; }
-        .btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: #1a1a1a; color: #fff; font-size: 20px; cursor: pointer; }
+        /* Floating 5-Button Action Controller Row Layout */
+        .tinder-action-row { position: absolute; bottom: 20px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 4; }
+        .ctrl-btn { width: 48px; height: 48px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; background: #161224; border: 1px solid #231d3a; font-size: 18px; transition: transform 0.1s; }
+        .ctrl-btn:active { transform: scale(0.85); }
+        .ctrl-btn.btn-large { width: 56px; height: 56px; font-size: 22px; }
+        .c-yellow { color: #ffca28; } .c-red { color: #ff4757; } .c-blue { color: #29b6f6; } .c-green { color: #2ed573; } .c-purple { color: #b388ff; }
+
+        /* --- REDESIGNED PROFILE VIEW (cbdf85d5437cda522b1e17fb09ceeb9c) --- */
+        .profile-header-group { display: flex; flex-direction: column; align-items: center; margin-top: 10px; margin-bottom: 20px; width: 100%; }
+        .avatar-ring-container { position: relative; width: 110px; height: 110px; display: flex; justify-content: center; align-items: center; margin-bottom: 12px; }
+        .avatar-svg-ring { position: absolute; width: 100%; height: 100%; transform: rotate(-90deg); }
+        .profile-avatar-circle { width: 92px; height: 92px; border-radius: 50%; overflow: hidden; z-index: 2; background: #251d3a; }
+        .profile-avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-percentage-tag { position: absolute; bottom: -4px; background: #ff477e; color: white; font-size: 10px; font-weight: bold; padding: 2px 8px; border-radius: 10px; border: 2px solid #0b0914; z-index: 3; }
+        .profile-headline-name { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .edit-profile-pill { background: #161224; border: 1px solid #231d3a; color: #ffffff; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-top: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
         
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; background: #000; border-top: 1px solid #222; }
-        .nav-icon { font-size: 24px; cursor: pointer; color: #555; }
-        .nav-icon.active { color: #fe3c72; }
+        /* Shortcut Control Dashboard Grid */
+        .shortcut-dashboard-grid { display: flex; width: 100%; max-width: 360px; gap: 10px; margin-bottom: 20px; }
+        .shortcut-card { flex: 1; background: #161224; border: 1px solid #231d3a; border-radius: 16px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+        .shortcut-add-icon { position: absolute; top: -6px; right: -6px; background: #a384ff; color: #0b0914; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; font-weight: bold; border: 2px solid #0b0914; }
+        .shortcut-icon { font-size: 22px; margin-bottom: 8px; }
+        .shortcut-title { font-size: 11px; color: #b5aed4; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2px; }
+        .shortcut-action-txt { font-size: 12px; color: #ffffff; font-weight: 700; margin-top: 4px; }
+
+        /* Golden Soulify VIP Upgrade Banner Comparison Document */
+        .soulify-gold-banner { background: linear-gradient(135deg, #2c1a4d 0%, #170d29 100%); border: 1px solid #d4af37; border-radius: 20px; width: 100%; max-width: 360px; padding: 20px; position: relative; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15); }
+        .gold-banner-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .gold-title-branding { font-size: 20px; font-weight: 800; color: #d4af37; display: flex; align-items: center; gap: 4px; }
+        .gold-vip-tag { background: #d4af37; color: #000000; font-size: 10px; font-weight: 800; padding: 1px 5px; border-radius: 4px; vertical-align: middle; }
+        .gold-upgrade-trigger-btn { background: #d4af37; color: #000000; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .gold-feature-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .gold-feature-table th { font-size: 11px; text-transform: uppercase; color: #b5aed4; text-align: left; padding-bottom: 8px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        .gold-feature-table td { padding: 10px 0; font-size: 13px; color: #e1e1e6; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .table-lock-icon { font-size: 14px; text-align: right; }
+
+        /* --- BUTTONS & NAVIGATION --- */
+        .dategram-btn { background: #a384ff; color: #000000; border: none; padding: 16px; border-radius: 24px; width: 100%; max-width: 340px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(163, 132, 255, 0.2); }
+        .dategram-btn:active { transform: scale(0.98); }
+        .bottom-nav { background-color: #161224; height: 68px; display: flex; border-top: 1px solid #231d3a; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #585075; position: relative; cursor: pointer; }
+        .nav-item.active { color: #a384ff; }
+        .nav-icon { font-size: 24px; }
+
+        /* --- MODAL PAYWALL OVERLAY --- */
+        .paywall-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 9, 20, 0.98); z-index: 100; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+        .close-paywall { align-self: flex-end; color: #585075; font-size: 24px; cursor: pointer; }
+        .paywall-title { font-size: 22px; color: #ffcd38; margin-top: 20px; margin-bottom: 8px; font-weight: bold; }
+        .payment-link { display: flex; justify-content: space-between; align-items: center; background: #161224; border: 1px solid #231d3a; color: white; text-decoration: none; padding: 15px; border-radius: 14px; font-size: 14px; font-weight: 600; margin-bottom: 10px; width: 100%; max-width: 320px; }
     </style>
 </head>
 <body>
 
-    <!-- DISCOVER SCREEN -->
-    <div id="discover" class="page">
-        <div class="header"><span>✕</span><span>Soulify</span><span>⋮</span></div>
-        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" class="profile-img">
-        <div class="info-overlay">
-            <h2>Luna 25 ✓</h2>
-            <p>😍 Looking for: Long-term, open to short</p>
+    <div class="app-header">
+        <div class="logo-area" id="header-logo">💜 Soulify</div>
+    </div>
+
+    <!-- ONBOARDING FLOW STEP 1 -->
+    <div class="app-view active-view" id="view-onboarding-1">
+        <div class="progress-container">
+            <div class="progress-bar active"></div>
+            <div class="progress-bar"></div>
+            <div class="progress-bar"></div>
         </div>
-        <div class="action-row">
-            <button class="btn" onclick="alert('Rewind')">🔄</button>
-            <button class="btn" onclick="alert('Nope')">✕</button>
-            <button class="btn" onclick="alert('Super Like')">★</button>
-            <button class="btn" onclick="alert('Like')">💚</button>
-            <button class="btn" onclick="alert('Boost')">⚡</button>
+        <div class="section-title">Personal Info</div>
+        <div class="form-block">
+            <label>Your age</label>
+            <input type="number" id="setup-age" class="premium-input" value="18">
+        </div>
+        <div class="form-block">
+            <label>Your gender</label>
+            <div class="pill-toggle">
+                <button class="pill-btn" id="gender-woman" onclick="setGender('Woman')">Woman</button>
+                <button class="pill-btn active" id="gender-man" onclick="setGender('Man')">Man</button>
+            </div>
+        </div>
+        <div class="form-block">
+            <label>Your Country</label>
+            <select id="setup-country" class="premium-select">
+                <option value="Nigeria">Nigeria</option>
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Ghana">Ghana</option>
+            </select>
+        </div>
+        <button class="dategram-btn" onclick="goToStep(2)">Continue</button>
+    </div>
+
+    <!-- ONBOARDING FLOW STEP 2 -->
+    <div class="app-view" id="view-onboarding-2">
+        <div class="progress-container">
+            <div class="progress-bar active"></div>
+            <div class="progress-bar active"></div>
+            <div class="progress-bar"></div>
+        </div>
+        <div class="section-title">Interests</div>
+        <div class="form-block">
+            <label>Looking for</label>
+            <div class="pill-toggle">
+                <button class="pill-btn active" id="seek-woman" onclick="setSeeking('Woman')">Woman</button>
+                <button class="pill-btn" id="seek-man" onclick="setSeeking('Man')">Man</button>
+            </div>
+        </div>
+        <div class="form-block">
+            <label>Age range</label>
+            <select id="setup-range" class="premium-select">
+                <option value="18 - 25">18 - 25</option>
+                <option value="26 - 33">26 - 33</option>
+                <option value="34 - 45">34 - 45</option>
+            </select>
+        </div>
+        <button class="dategram-btn" onclick="goToStep(3)">Continue</button>
+    </div>
+
+    <!-- ONBOARDING FLOW STEP 3 -->
+    <div class="app-view" id="view-onboarding-3">
+        <div class="progress-container">
+            <div class="progress-bar active"></div>
+            <div class="progress-bar active"></div>
+            <div class="progress-bar active"></div>
+        </div>
+        <div style="text-align: center; margin-top: 40px; max-width: 300px;">
+            <div style="font-size: 60px; margin-bottom: 20px;">✨</div>
+            <h3 style="font-size: 20px; margin-bottom: 10px;">5 profiles selected for you by AI</h3>
+            <p style="color: #b5aed4; font-size: 14px; margin-bottom: 30px; line-height: 1.4;">Matches successfully loaded within your specified country criteria.</p>
+            <button class="dategram-btn" onclick="finalizeSetup()">Continue to App</button>
         </div>
     </div>
 
-    <!-- MESSAGES SCREEN -->
-    <div id="messages" class="page">
-        <div class="header"><span>Messages</span></div>
-        <p style="padding: 20px;">No messages yet.</p>
+    <!-- MAIN APPS VIEW 1: TINDER-STYLE FULL DISCOVER CARD VIEW (Screenshot_20260628_022120) -->
+    <div class="app-view" id="view-discover">
+        <div class="discover-container">
+            <div class="card-story-lines">
+                <div class="story-segment active"></div>
+                <div class="story-segment"></div>
+                <div class="story-segment"></div>
+            </div>
+            
+            <img id="profile-picture" class="card-photo-bg" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" alt="User profile image">
+            <div class="card-gradient-overlay"></div>
+            
+            <div class="card-info-content">
+                <div class="card-identity-row">
+                    <span id="profile-name">Sarah, 24</span>
+                    <span class="verification-badge">✓</span>
+                </div>
+                <div class="card-status-badge">
+                    😍 Looking for: <span id="profile-bio">Long-term, open to short</span>
+                </div>
+            </div>
+
+            <!-- Full Floating Tinder 5-Button Action Console layout -->
+            <div class="tinder-action-row">
+                <button class="ctrl-btn c-yellow" onclick="nextCard()">🔄</button>
+                <button class="ctrl-btn btn-large c-red" onclick="nextCard()">✕</button>
+                <button class="ctrl-btn c-blue" onclick="openPaywall('⭐ Super Like', 'Stand out from the crowd instantly.')">⭐</button>
+                <button class="ctrl-btn btn-large c-green" onclick="nextCard()">💜</button>
+                <button class="ctrl-btn c-purple" onclick="openPaywall('⚡ Profile Boost', 'Be the top profile in your country area.')">⚡</button>
+            </div>
+        </div>
     </div>
 
-    <!-- NAVIGATION -->
-    <nav class="bottom-nav">
-        <div class="nav-icon active" onclick="showPage('discover')">🔥</div>
-        <div class="nav-icon" onclick="showPage('messages')">💬</div>
-    </nav>
+    <!-- MAIN APPS VIEW 2: LIKES SECURE PORTAL WALL -->
+    <div class="app-view" id="view-likes">
+        <div style="text-align: center; margin-top: 50px;">
+            <div style="font-size: 50px; margin-bottom: 15px;">🔒</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Likes Portal Blurred</h3>
+            <p style="color: #b5aed4; font-size: 13px; margin-bottom: 20px; max-width: 280px;">Unlock VIP access to reveal who swiped right on you.</p>
+            <button class="dategram-btn" onclick="openPaywall('❤️ Uncover Secret Swipes', 'See your admirers immediately.')">Unlock Vault</button>
+        </div>
+    </div>
+
+    <!-- MAIN APPS VIEW 3: CHAT LISTINGS CHANNELS -->
+    <div class="app-view" id="view-matches">
+        <div style="text-align: center; margin-top: 50px;">
+            <div style="font-size: 45px; margin-bottom: 15px;">💬</div>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">No Current Chat Rooms</h3>
+            <p style="color: #b5aed4; font-size: 13px; margin-bottom: 20px; max-width: 280px;">Upgrade to premium to bypass 20-minute chat expiry filters.</p>
+        </div>
+    </div>
+
+    <!-- MAIN APPS VIEW 4: TINDER PROFILE INTERFACE REDESIGN (cbdf85d5437cda522b1e17fb09ceeb9c) -->
+    <div class="app-view" id="view-profile">
+        <div class="profile-header-group">
+            <div class="avatar-ring-container">
+                <svg class="avatar-svg-ring" viewBox="0 0 36 36">
+                    <path class="ring-bg" stroke="rgba(163,132,255,0.15)" stroke-width="2" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="ring-fill" stroke="#ff477e" stroke-width="2" stroke-dasharray="60, 100" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div class="profile-avatar-circle">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop" alt="Profile avatar picture">
+                </div>
+                <div class="avatar-percentage-tag">60%</div>
+            </div>
+            <div class="profile-headline-name"><span id="user-core-title">Alex, 18</span> ✓</div>
+            <button class="edit-profile-pill" onclick="location.reload()">✏️ Edit profile</button>
+        </div>
+
+        <!-- Shortcut Action Cards Dashboard Row -->
+        <div class="shortcut-dashboard-grid">
+            <div class="shortcut-card" onclick="openPaywall('⭐ Super Likes', 'Get noticed immediately.')">
+                <div class="shortcut-add-icon">+</div>
+                <div class="shortcut-icon" style="color: #29b6f6;">★</div>
+                <div class="shortcut-title">0 Super Likes</div>
+                <div class="shortcut-action-txt" style="color: #29b6f6;">GET MORE</div>
+            </div>
+            <div class="shortcut-card" onclick="openPaywall('⚡ Boost Dashboard', 'Maximize active loop traffic visibility.')">
+                <div class="shortcut-add-icon">+</div>
+                <div class="shortcut-icon" style="color: #b388ff;">⚡</div>
+                <div class="shortcut-title">My Boosts</div>
+                <div class="shortcut-action-txt" style="color: #b388ff;">GET MORE</div>
+            </div>
+            <div class="shortcut-card" onclick="openPaywall('👑 Premium Status', 'Configure elite account features.')">
+                <div class="shortcut-icon" style="color: #ff4757;">🔥</div>
+                <div class="shortcut-title">Subscriptions</div>
+            </div>
+        </div>
+
+        <!-- Golden Soulify VIP Feature Matrix upgrade Comparison Panel -->
+        <div class="soulify-gold-banner">
+            <div class="gold-banner-header">
+                <div>
+                    <div class="gold-title-branding">soulify <span class="gold-vip-tag">VIP</span></div>
+                    <p style="font-size: 12px; color: #b5aed4; margin-top: 2px;">Your passport to premium matches</p>
+                </div>
+                <button class="gold-upgrade-trigger-btn" onclick="openPaywall('👑 Soulify VIP Activation', 'Unlock all app functionality.')">UPGRADE</button>
+            </div>
+            
+            <table class="gold-feature-table">
+                <thead>
+                    <tr>
+                        <th>What's Included</th>
+                        <th style="text-align:right;">Free</th>
+                        <th style="text-align:right; color:#d4af37;">VIP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>See Who Likes You</td>
+                        <td style="text-align:right;">🔒</td>
+                        <td style="text-align:right; color:#d4af37;">✓</td>
+                    </tr>
+                    <tr>
+                        <td>AI Handpicked Top Picks</td>
+                        <td style="text-align:right;">🔒</td>
+                        <td style="text-align:right; color:#d4af37;">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Unlimited Super Likes</td>
+                        <td style="text-align:right;">🔒</td>
+                        <td style="text-align:right; color:#d4af37;">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PREMIUM TELEGRAM PAYWALL STORES BOX LINKS -->
+    <div class="paywall-modal" id="paywallScreen">
+        <div class="close-paywall" onclick="document.getElementById('paywallScreen').style.display='none'">✕</div>
+        <div class="paywall-title" id="paywallTitle">👑 Soulify VIP</div>
+        <p style="color: #b5aed4; font-size: 14px; margin-bottom: 25px; text-align: center;" id="paywallText">Unlock premium system access immediately.</p>
+        
+        <a href="https://selar.com/h3k5rsum22" class="payment-link" target="_blank"><span>Weekly Premium Plan</span> <span style="color:#a384ff;">₦8,255</span></a>
+        <a href="https://selar.com/5j6778i289" class="payment-link" target="_blank"><span>Monthly Special VIP</span> <span style="color:#a384ff;">₦20,655</span></a>
+        <a href="https://selar.com/ab80462892" class="payment-link" target="_blank"><span>VIP Elite Weekly Access</span> <span style="color:#a384ff;">₦12,500</span></a>
+    </div>
+
+    <!-- Bottom App Navigation Toolbar Frame -->
+    <div class="bottom-nav" id="main-navigation-panel" style="display: none;">
+        <div class="nav-item active" id="btn-discover" onclick="switchTab('discover')"><span class="nav-icon">🔥</span></div>
+        <div class="nav-item" id="btn-likes" onclick="switchTab('likes')"><span class="nav-icon">💎</span></div>
+        <div class="nav-item" id="btn-matches" onclick="switchTab('matches')"><span class="nav-icon">💬</span></div>
+        <div class="nav-item" id="btn-profile" onclick="switchTab('profile')"><span class="nav-icon">👤</span></div>
+    </div>
 
     <script>
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById(pageId).style.display = 'block';
-            document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
-            event.target.classList.add('active');
+        const discoveryStack = [
+            { name: "Sarah, 24", bio: "Long-term, open to short dating channels.", pic: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" },
+            { name: "Karol Vanesa, 22", bio: "Late night conversations and chill vibes.", pic: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&auto=format&fit=crop" },
+            { name: "David, 26", bio: "Looking for someone adventurous and fun.", pic: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop" }
+        ];
+
+        let currentCardIndex = 0;
+        let registrationGender = "Man";
+        let registrationSeeking = "Woman";
+
+        function setGender(type) {
+            registrationGender = type;
+            document.getElementById('gender-woman').classList.remove('active');
+            document.getElementById('gender-man').classList.remove('active');
+            document.getElementById(`gender-${type.toLowerCase()}`).classList.add('active');
+        }
+
+        function setSeeking(type) {
+            registrationSeeking = type;
+            document.getElementById('seek-woman').classList.remove('active');
+            document.getElementById('seek-man').classList.remove('active');
+            document.getElementById(`seek-${type.toLowerCase()}`).classList.add('active');
+        }
+
+        function goToStep(stepNumber) {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active-view'));
+            document.getElementById(`view-onboarding-${stepNumber}`).classList.add('active-view');
+        }
+
+        function finalizeSetup() {
+            const chosenAge = document.getElementById('setup-age').value;
+            document.getElementById('user-core-title').innerText = `Alex, ${chosenAge}`;
+            document.getElementById('main-navigation-panel').style.display = 'flex';
+            switchTab('discover');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active-view'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(`view-${tabId}`).classList.add('active-view');
+            document.getElementById(`btn-${tabId}`).classList.add('active');
+        }
+
+        function nextCard() {
+            currentCardIndex = (currentCardIndex + 1) % discoveryStack.length;
+            document.getElementById('profile-name').innerText = discoveryStack[currentCardIndex].name;
+            document.getElementById('profile-bio').innerText = discoveryStack[currentCardIndex].bio;
+            document.getElementById('profile-picture').src = discoveryStack[currentCardIndex].pic;
+        }
+
+        function openPaywall(title, text) {
+            document.getElementById('paywallTitle').innerText = title;
+            document.getElementById('paywallText').innerText = text;
+            document.getElementById('paywallScreen').style.display = 'flex';
         }
     </script>
 </body>
