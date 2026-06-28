@@ -13,27 +13,35 @@
         .logo-area { display: flex; align-items: center; gap: 8px; color: #a384ff; font-size: 22px; font-weight: bold; }
         .header-timer { background: #cf2323; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: bold; display: none; }
         
-        /* Main Container for Swipe Card */
-        .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; position: relative; }
+        /* Screen View Logic */
+        .app-view { display: none; flex: 1; flex-direction: column; padding: 20px; justify-content: center; align-items: center; overflow-y: auto; position: relative; }
+        .app-view.active-view { display: flex; }
+
+        /* Card Layout */
         .profile-card { background: linear-gradient(145deg, #251d3a, #1a152b); border-radius: 20px; width: 100%; max-width: 360px; height: 500px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #362b55; }
-        
-        /* Photo Stack Layout */
-        .photo-area { position: relative; flex: 1; background-color: #120e22; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .photo-area { position: relative; flex: 1; background-color: #120e22; overflow: hidden; }
+        .profile-img { width: 100%; height: 100%; object-fit: cover; }
         .info-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(11, 9, 20, 0.95)); padding: 20px 15px; }
         .user-name { font-size: 22px; margin-bottom: 5px; }
         .user-bio { font-size: 14px; color: #b5aed4; line-height: 1.4; }
 
-        /* Action Buttons Row */
+        /* Action Rows */
         .action-row { display: flex; justify-content: space-around; padding: 12px; background-color: #161224; border-top: 1px solid #231d3a; }
         .action-btn { background: #251d3a; border: 1px solid #3c315e; color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: 0.2s; font-size: 14px; }
         .action-btn:active { transform: scale(0.95); }
         .like-btn { border-color: #ff477e; color: #ff477e; }
 
-        /* Instant Connect Message Input Box */
+        /* Instant Connect Message Box */
         .instant-chat-box { padding: 12px; background-color: #120e22; display: flex; gap: 8px; border-top: 1px solid #231d3a; }
         .chat-input { flex: 1; background-color: #1f1933; border: 1px solid #362b55; border-radius: 25px; padding: 12px 18px; color: white; font-size: 14px; outline: none; }
-        .chat-input::placeholder { color: #645a8a; }
         .send-btn { background: linear-gradient(135deg, #8a4fff, #6122e6); border: none; color: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px; }
+
+        /* Center Content Layouts for Locked Tabs */
+        .center-notice { text-align: center; max-width: 300px; }
+        .center-icon { font-size: 50px; margin-bottom: 15px; }
+        .center-title { font-size: 20px; margin-bottom: 10px; color: #ffcd38; font-weight: bold; }
+        .center-desc { color: #b5aed4; font-size: 14px; margin-bottom: 20px; line-height: 1.4; }
+        .view-premium-btn { background: linear-gradient(135deg, #a384ff, #6122e6); color: white; border: none; padding: 12px 25px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
         /* Bottom Nav Bar layout */
         .bottom-nav { background-color: #161224; height: 65px; display: flex; border-top: 1px solid #231d3a; }
@@ -41,142 +49,289 @@
         .nav-item.active { color: #a384ff; }
         .nav-icon { font-size: 20px; }
 
-        /* Advanced Paywall Modal Screen */
+        /* Multi-Tier Paywall Overlay Screen */
         .paywall-modal { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 9, 20, 0.98); z-index: 100; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
         .close-paywall { align-self: flex-end; color: #645a8a; font-size: 24px; cursor: pointer; margin-bottom: 5px; }
         .paywall-title { font-size: 22px; color: #ffcd38; margin-bottom: 8px; font-weight: bold; text-align: center; }
         .paywall-text { color: #b5aed4; margin-bottom: 15px; font-size: 13px; text-align: center; max-width: 300px; }
         
-        /* Tier Selection Layout */
         .tier-section { width: 100%; max-width: 320px; margin-bottom: 15px; }
         .tier-heading { font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #a384ff; text-transform: uppercase; letter-spacing: 0.5px; border-left: 3px solid #a384ff; padding-left: 8px; }
         .links-grid { display: flex; flex-direction: column; gap: 8px; }
-        .payment-link { display: flex; justify-content: space-between; align-items: center; background: #1f1933; border: 1px solid #362b55; color: white; text-decoration: none; padding: 12px 15px; border-radius: 12px; font-size: 13px; font-weight: 500; transition: 0.2s; }
-        .payment-link:active { background: #2b2347; transform: scale(0.98); }
+        .payment-link { display: flex; justify-content: space-between; align-items: center; background: #1f1933; border: 1px solid #362b55; color: white; text-decoration: none; padding: 12px 15px; border-radius: 12px; font-size: 13px; font-weight: 500; }
         .payment-link span.price { color: #ffcd38; font-weight: bold; }
         
-        /* VIP coloring updates */
         .vip-heading { color: #ff4b4b; border-left-color: #ff4b4b; }
-        .vip-link { border-color: #551d1d; }
         .vip-link span.price { color: #ff4b4b; }
+
+        /* Admin Dashboard UI Style Overlay */
+        .admin-modal { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #120e22; z-index: 200; flex-direction: column; padding: 25px; overflow-y: auto; }
+        .admin-section { background: #1f1933; padding: 15px; border-radius: 12px; border: 1px solid #362b55; margin-bottom: 15px; }
+        .admin-toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; }
+        .status-badge { background: #362b55; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; color: #a384ff; }
+        
+        /* Circular Profile Picture Styling */
+        .user-avatar-container { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #a384ff; overflow: hidden; cursor: pointer; user-select: none; }
+        .user-avatar-img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <!-- Header Section -->
     <div class="app-header">
-        <div class="logo-area">💜 Soulify</div>
+        <div class="logo-area" id="header-logo">💜 Soulify</div>
         <div class="header-timer" id="displayTimer">20:00</div>
     </div>
 
-    <!-- Main Dynamic Feed Container -->
-    <div class="main-content">
+    <!-- VIEW 1: DISCOVER SCREEN -->
+    <div class="app-view active-view" id="view-discover">
         <div class="profile-card" id="activeCard">
             <div class="photo-area">
-                <div style="font-size: 90px;">👩</div> 
+                <img id="profile-picture" class="profile-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" alt="Profile Image">
                 <div class="info-overlay">
-                    <h2 class="user-name">Sarah, 24</h2>
-                    <p class="user-bio">Love traveling, music, and finding deep connections. Let's chat instantly!</p>
+                    <h2 class="user-name" id="profile-name">Sarah, 24</h2>
+                    <p class="user-bio" id="profile-bio">Love traveling, music, and finding deep connections. Let's chat instantly!</p>
                 </div>
             </div>
             <div class="action-row">
-                <button class="action-btn" onclick="nextProfile()">❌ Pass</button>
-                <button class="action-btn like-btn" onclick="nextProfile()">❤️ Like</button>
+                <button class="action-btn" onclick="nextSimulatedProfile()">❌ Pass</button>
+                <button class="action-btn like-btn" onclick="nextSimulatedProfile()">❤️ Like</button>
             </div>
             <div class="instant-chat-box">
                 <input type="text" id="messageInp" class="chat-input" placeholder="Type a message to start chatting...">
                 <button class="send-btn" onclick="startInstantChat()">🚀</button>
             </div>
         </div>
+    </div>
 
-        <!-- Dynamic Multi-Tier Paywall Screen Modal -->
-        <div class="paywall-modal" id="paywallScreen">
-            <div class="close-paywall" onclick="closePaywallPopup()">✕</div>
-            <div class="paywall-title" id="paywallTitle">⏱️ Action Locked</div>
-            <p class="paywall-text" id="paywallText">Upgrade your plan to unlock permanent matching features, infinite likes, and completely remove restriction windows.</p>
-            
-            <!-- PREMIUM PORTAL STACK -->
-            <div class="tier-section">
-                <div class="tier-heading">⭐ Soulify Premium</div>
-                <div class="links-grid">
-                    <a href="https://selar.com/h3k5rsum22" class="payment-link" target="_blank"><span>Weekly Access</span> <span class="price">₦8,255</span></a>
-                    <a href="https://selar.com/5j6778i289" class="payment-link" target="_blank"><span>Monthly Special</span> <span class="price">₦20,655</span></a>
-                    <a href="https://selar.com/1n67028y14" class="payment-link" target="_blank"><span>3 Months Plan (Save 20%)</span> <span class="price">₦48,220</span></a>
+    <!-- VIEW 2: LIKES SCREEN -->
+    <div class="app-view" id="view-likes">
+        <div class="center-notice" id="likes-locked-content">
+            <div class="center-icon">🔒</div>
+            <div class="center-title">Likes Portal Blurred</div>
+            <div class="center-desc">Unlock VIP Elite access to instantly lift the filter and see who is waiting to meet you.</div>
+            <button class="view-premium-btn" onclick="triggerPaywallPopup('❤️ Likes Vault Locked', 'See everyone who swiped right on you instantly.')">Unlock VIP Elite</button>
+        </div>
+        <div class="center-notice" id="likes-unlocked-content" style="display:none;">
+            <div class="center-icon" style="color:#ff477e">👑</div>
+            <div class="center-title">VIP Access Unlocked</div>
+            <div class="center-desc">There are currently 14 global users who have liked your card stack!</div>
+        </div>
+    </div>
+
+    <!-- VIEW 3: MATCHES SCREEN -->
+    <div class="app-view" id="view-matches">
+        <div class="center-notice" id="matches-locked-content">
+            <div class="center-icon">💬</div>
+            <div class="center-title">No Unlocked Matches</div>
+            <div class="center-desc">Free tier conversations are subjected to an immediate 20-minute time constraint window.</div>
+            <button class="view-premium-btn" onclick="triggerPaywallPopup('💬 Chat Manager Locked', 'Upgrade to bypass the 20-minute constraint loop permanently.')">Unlock Premium</button>
+        </div>
+        <div class="center-notice" id="matches-unlocked-content" style="display:none;">
+            <div class="center-icon" style="color:#a384ff">⭐️</div>
+            <div class="center-title">Premium Chats Active</div>
+            <div class="center-desc">Your matched messaging channels are ready. Time constraints are permanently deactivated.</div>
+        </div>
+    </div>
+
+    <!-- VIEW 4: USER PROFILE SETUP SCREEN -->
+    <div class="app-view" id="view-profile">
+        <div class="center-notice" style="width:100%; max-width:340px; text-align: left; background:#161224; padding:20px; border-radius:15px; border:1px solid #231d3a;">
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+                <!-- REAL IMAGE SOURCE REPLACED THE AVATAR SYSTEM -->
+                <div class="user-avatar-container" onclick="triggerAdminTap()">
+                    <img class="user-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop" alt="My Profile Photo">
+                </div>
+                <div>
+                    <h3 style="color:white;" id="user-display-title">Alex, 23</h3>
+                    <p style="color:#a384ff; font-size:12px; font-weight: 500;" id="user-tier-badge">Tier: Free User</p>
                 </div>
             </div>
+            
+            <p style="color:#b5aed4; font-size:13px; line-height:1.5; margin-bottom:20px;">
+                Manage your personalized preferences, verification badges, and location match parameters here.
+            </p>
 
-            <!-- VIP PORTAL STACK -->
-            <div class="tier-section">
-                <div class="tier-heading vip-heading">👑 Soulify VIP Elite</div>
-                <div class="links-grid">
-                    <a href="https://ab80462892" class="payment-link vip-link" target="_blank"><span>VIP Weekly Elite</span> <span class="price">₦12,500</span></a>
-                    <a href="https://selar.com/0178gq37o0" class="payment-link vip-link" target="_blank"><span>VIP Monthly Elite</span> <span class="price">₦32,000</span></a>
-                    <a href="https://selar.com/2bf57t8d15" class="payment-link vip-link" target="_blank"><span>VIP 3 Months (Save 35%)</span> <span class="price">₦75,500</span></a>
-                </div>
+            <!-- SIMULATION TEST TRIGGER TO BECOME VIP INSTANTLY -->
+            <button class="view-premium-btn" style="width:100%; margin-bottom:8px; background:linear-gradient(135deg, #ff4b4b, #cf2323);" onclick="simulateVipUpgrade()">
+                🚀 Simulate VIP Status (Test)
+            </button>
+            <button class="view-premium-btn" style="width:100%; background:#251d3a; border:1px solid #3c315e;" onclick="triggerPaywallPopup('👑 Status Manager', 'View real store links.')">
+                View Selar Links Portal
+            </button>
+        </div>
+    </div>
+
+    <!-- MASTER ADMIN PANEL OVERLAY SCREEN -->
+    <div class="admin-modal" id="adminPanel">
+        <div style="display:flex; justify-content:between; align-items:center; margin-bottom:20px; border-bottom:1px solid #231d3a; padding-bottom:10px;">
+            <h2 style="color:#a384ff; flex:1;">🖥️ Soulify Master Admin</h2>
+            <div style="color:#645a8a; font-size:22px; cursor:pointer;" onclick="closeAdminPanel()">✕</div>
+        </div>
+
+        <div class="admin-section">
+            <h4 style="color:white; margin-bottom:10px; font-size:14px;">1. Monetization Switches</h4>
+            <div class="admin-toggle-row"><span>Global 20-Min Lock</span> <span class="status-badge" style="background:#cf2323; color:white;">ACTIVE</span></div>
+            <div class="admin-toggle-row"><span>Interstitial Intercept Ads</span> <span class="status-badge" style="background:#23cf5c; color:white;">ON</span></div>
+        </div>
+
+        <div class="admin-section">
+            <h4 style="color:white; margin-bottom:10px; font-size:14px;">2. Blue Tick Approvals</h4>
+            <div style="font-size:12px; color:#b5aed4; background:#120e22; padding:8px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+                <span>@joshua_dev (Pending)</span>
+                <button style="background:#6122e6; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold;" onclick="alert('Verification approved! Blue badge assigned.')">Approve</button>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h4 style="color:white; margin-bottom:10px; font-size:14px;">3. Active System Metrics</h4>
+            <div class="admin-toggle-row"><span style="color:#b5aed4;">Total Users Today:</span> <span style="font-weight:bold;">184</span></div>
+            <div class="admin-toggle-row"><span style="color:#b5aed4;">Selar Sales Conversions:</span> <span style="font-weight:bold; color:#23cf5c;">₦48,500</span></div>
+        </div>
+    </div>
+
+    <!-- PAYWALL SYSTEM SCREEN MODAL -->
+    <div class="paywall-modal" id="paywallScreen">
+        <div class="close-paywall" onclick="closePaywallPopup()">✕</div>
+        <div class="paywall-title" id="paywallTitle">⏱️ Action Locked</div>
+        <p class="paywall-text" id="paywallText">Upgrade your tier to destroy timing loops, view matches, and communicate globally.</p>
+        
+        <!-- PREMIUM PORTAL -->
+        <div class="tier-section">
+            <div class="tier-heading">⭐ Soulify Premium</div>
+            <div class="links-grid">
+                <a href="https://selar.com/h3k5rsum22" class="payment-link" target="_blank"><span>Weekly Access</span> <span class="price">₦8,255</span></a>
+                <a href="https://selar.com/5j6778i289" class="payment-link" target="_blank"><span>Monthly Special</span> <span class="price">₦20,655</span></a>
+                <a href="https://selar.com/1n67028y14" class="payment-link" target="_blank"><span>3 Months Plan</span> <span class="price">₦48,220</span></a>
+            </div>
+        </div>
+
+        <!-- VIP PORTAL -->
+        <div class="tier-section">
+            <div class="tier-heading vip-heading">👑 Soulify VIP Elite</div>
+            <div class="links-grid">
+                <a href="https://selar.com/ab80462892" class="payment-link vip-link" target="_blank"><span>VIP Weekly Elite</span> <span class="price">₦12,500</span></a>
+                <a href="https://selar.com/0178gq37o0" class="payment-link vip-link" target="_blank"><span>VIP Monthly Elite</span> <span class="price">₦32,000</span></a>
+                <a href="https://selar.com/2bf57t8d15" class="payment-link vip-link" target="_blank"><span>VIP 3 Months</span> <span class="price">₦75,500</span></a>
             </div>
         </div>
     </div>
 
-    <!-- Footer Menu Bars -->
+    <!-- Footer Menu Navigation Bar -->
     <div class="bottom-nav">
-        <div class="nav-item active"><span class="nav-icon">🔥</span>Discover</div>
-        <div class="nav-item" onclick="triggerPaywallPopup('❤️ Tab Locked', 'Unlock VIP Elite to instantly unblur the profile pictures of users who already swiped right on you!')"><span class="nav-icon">❤️</span>Likes</div>
-        <div class="nav-item" onclick="triggerPaywallPopup('💬 Tab Locked', 'Conversations require an active Match status to preserve. Upgrade to Premium to permanently chat without constraints!')"><span class="nav-icon">💬</span>Matches</div>
-        <div class="nav-item"><span class="nav-icon">👤</span>Profile</div>
+        <div class="nav-item active" id="btn-discover" onclick="switchTab('discover')"><span class="nav-icon">🔥</span>Discover</div>
+        <div class="nav-item" id="btn-likes" onclick="switchTab('likes')"><span class="nav-icon">❤️</span>Likes</div>
+        <div class="nav-item" id="btn-matches" onclick="switchTab('matches')"><span class="nav-icon">💬</span>Matches</div>
+        <div class="nav-item" id="btn-profile" onclick="switchTab('profile')"><span class="nav-icon">👤</span>Profile</div>
     </div>
 
     <script>
+        const simulatedUsers = [
+            { name: "Sarah, 24", bio: "Love traveling, music, and finding deep connections. Let's chat instantly!", pic: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" },
+            { name: "David, 26", bio: "Software engineer by day, explorer by night. Tell me your favorite movie.", pic: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop" },
+            { name: "Amara, 22", bio: "Artist and food lover. Let's explore the finest spots around Lagos!", pic: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&auto=format&fit=crop" },
+            { name: "Chidi, 27", bio: "Fitness instructor. Looking for someone driven, funny, and genuine.", pic: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop" }
+        ];
+        
+        let currentUserIndex = 0;
         let timerInstance;
-        let timeRemaining = 1200; // 20 minutes in seconds
+        let timeRemaining = 1200; 
         let isChatActive = false;
+        let isVipUser = false;
+        let adminTapCount = 0;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active-view'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById(`view-${tabName}`).classList.add('active-view');
+            document.getElementById(`btn-${tabName}`).classList.add('active');
+        }
+
+        function nextSimulatedProfile() {
+            currentUserIndex = (currentUserIndex + 1) % simulatedUsers.length;
+            document.getElementById('profile-name').innerText = simulatedUsers[currentUserIndex].name;
+            document.getElementById('profile-bio').innerText = simulatedUsers[currentUserIndex].bio;
+            document.getElementById('profile-picture').src = simulatedUsers[currentUserIndex].pic;
+        }
 
         function startInstantChat() {
-            let messageText = document.getElementById('messageInp').value;
-            if(messageText.trim() === "") return alert("Please type a message first!");
+            let text = document.getElementById('messageInp').value;
+            if(text.trim() === "") return alert("Please type your message first!");
             
-            if(!isChatActive) {
+            if(!isChatActive && !isVipUser) {
                 isChatActive = true;
                 document.getElementById('displayTimer').style.display = 'block';
                 startCountdownTimer();
             }
-            
             document.getElementById('messageInp').value = "";
-            alert("Message Sent! Chat window initialized.");
+            alert("Message sent into simulated interface!");
+            nextSimulatedProfile();
         }
 
         function startCountdownTimer() {
             timerInstance = setInterval(() => {
+                if(isVipUser) {
+                    clearInterval(timerInstance);
+                    return;
+                }
                 if(timeRemaining <= 0) {
                     clearInterval(timerInstance);
-                    triggerPaywallPopup("⏱️ Time's Up!", "Your 20-minute chat window has locked. Upgrade to Premium or VIP to completely destroy conversation time locks!");
+                    triggerPaywallPopup("⏱️ Time's Up!", "Your 20-minute chat window has locked. Upgrade to continue.");
                     document.getElementById('activeCard').style.opacity = '0.05';
                 } else {
                     timeRemaining--;
-                    let mins = Math.floor(timeRemaining / 60);
-                    let secs = timeRemaining % 60;
-                    document.getElementById('displayTimer').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                    let m = Math.floor(timeRemaining / 60);
+                    let s = timeRemaining % 60;
+                    document.getElementById('displayTimer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
                 }
             }, 1000);
         }
 
-        function triggerPaywallPopup(title, text) {
-            if(title && text) {
-                document.getElementById('paywallTitle').innerText = title;
-                document.getElementById('paywallText').innerText = text;
+        // Tap circular picture 5 times to reveal hidden admin panel
+        function triggerAdminTap() {
+            adminTapCount++;
+            if(adminTapCount >= 5) {
+                adminTapCount = 0;
+                document.getElementById('adminPanel').style.display = 'flex';
             }
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function simulateVipUpgrade() {
+            isVipUser = true;
+            
+            document.getElementById('user-display-title').innerHTML = "Alex, 23 👑";
+            document.getElementById('user-tier-badge').innerText = "Tier: VIP Elite Member";
+            document.getElementById('header-logo').innerHTML = "👑 Soulify VIP";
+            
+            document.getElementById('displayTimer').style.display = 'none';
+            document.getElementById('activeCard').style.opacity = '1';
+            
+            document.getElementById('likes-locked-content').style.display = 'none';
+            document.getElementById('likes-unlocked-content').style.display = 'block';
+            document.getElementById('matches-locked-content').style.display = 'none';
+            document.getElementById('matches-unlocked-content').style.display = 'block';
+            
+            alert("Success! Account simulation upgraded to VIP Elite Status. All tabs unlocked.");
+        }
+
+        function triggerPaywallPopup(title, text) {
+            if(isVipUser) return; 
+            document.getElementById('paywallTitle').innerText = title;
+            document.getElementById('paywallText').innerText = text;
             document.getElementById('paywallScreen').style.display = 'flex';
         }
 
         function closePaywallPopup() {
-            if(timeRemaining > 0) {
+            if(timeRemaining > 0 || isVipUser) {
                 document.getElementById('paywallScreen').style.display = 'none';
             } else {
-                alert("You must select a premium upgrade package to unlock messaging access.");
+                alert("Upgrade your plan to unlock messaging access.");
             }
-        }
-
-        function nextProfile() {
-            alert("Loading next global profile stack card...");
         }
     </script>
 </body>
