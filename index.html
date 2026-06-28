@@ -7,7 +7,6 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #0b0914; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        
         .app-view { display: none; width: 100%; max-width: 400px; padding: 20px; text-align: center; }
         .active-view { display: flex; flex-direction: column; align-items: center; }
         
@@ -15,54 +14,78 @@
         .select-box { background: #161224; border: 1px solid #231d3a; color: #a384ff; padding: 15px; width: 100%; border-radius: 12px; font-size: 16px; margin-top: 20px; text-align: center; }
         .big-btn { background: #a384ff; color: black; padding: 15px; width: 100%; border-radius: 25px; border: none; font-weight: bold; margin-top: 20px; cursor: pointer; }
         
-        .card { width: 100%; height: 450px; background: #222; border-radius: 20px; position: relative; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500'); background-size: cover; background-position: center; }
+        .card { width: 100%; height: 400px; background: #222; border-radius: 20px; position: relative; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500'); background-size: cover; background-position: center; }
         .vip-banner { background: linear-gradient(135deg, #2c1a4d, #170d29); border: 2px solid #d4af37; padding: 20px; border-radius: 20px; margin-top: 20px; width: 100%; }
-        .nav { position: fixed; bottom: 0; width: 100%; max-width: 400px; display: flex; justify-content: space-around; background: #161224; padding: 15px; border-top: 1px solid #231d3a; }
+        
+        .nav { position: fixed; bottom: 0; width: 100%; max-width: 400px; display: flex; justify-content: space-around; background: #161224; padding: 15px; border-top: 1px solid #231d3a; cursor: pointer; font-size: 24px; }
     </style>
 </head>
 <body>
 
-    <!-- Language View -->
+    <!-- 1. Language -->
     <div class="app-view active-view" id="view-lang">
         <h2>Select Language</h2>
         <button class="btn" onclick="show('country')">English</button>
         <button class="btn" onclick="show('country')">Español</button>
-        <button class="btn" onclick="show('country')">Français</button>
     </div>
 
-    <!-- Country View -->
+    <!-- 2. Country (100) -->
     <div class="app-view" id="view-country">
         <h2>Select Country</h2>
         <select id="country-list" class="select-box"></select>
         <button class="big-btn" onclick="show('discover')">Continue</button>
     </div>
 
-    <!-- Discover View -->
+    <!-- 3. Discover -->
     <div class="app-view" id="view-discover">
         <div class="card"></div>
-        <div style="margin-top:15px; font-size: 20px; font-weight: bold;">Sarah, 24</div>
+        <h3 style="margin-top:15px;">Sarah, 24</h3>
         <div class="nav">
             <span onclick="show('discover')">🔥</span>
+            <span onclick="show('chat')">💬</span>
             <span onclick="show('profile')">👤</span>
         </div>
     </div>
 
-    <!-- Profile View -->
+    <!-- 4. Chat -->
+    <div class="app-view" id="view-chat">
+        <h2>Messages</h2>
+        <div class="btn">No matches yet. Keep swiping!</div>
+        <div class="nav">
+            <span onclick="show('discover')">🔥</span>
+            <span onclick="show('chat')">💬</span>
+            <span onclick="show('profile')">👤</span>
+        </div>
+    </div>
+
+    <!-- 5. Profile & Gold -->
     <div class="app-view" id="view-profile">
         <h3>Alex, 18</h3>
         <div class="vip-banner">
             <h3 style="color:#d4af37;">Soulify GOLD</h3>
-            <p style="font-size: 14px; margin: 10px 0;">Unlock Top Picks & See Who Likes You</p>
+            <p style="font-size: 14px; margin: 10px 0;">See who likes you & unlock Top Picks!</p>
             <button class="big-btn" style="background:#d4af37;">UPGRADE</button>
         </div>
         <div class="nav">
             <span onclick="show('discover')">🔥</span>
+            <span onclick="show('chat')">💬</span>
             <span onclick="show('profile')">👤</span>
         </div>
     </div>
 
     <script>
-        const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Chad", "Chile", "China", "Colombia", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta"];
+        const countries = [
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+            "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
+            "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Chad",
+            "Chile", "China", "Colombia", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark",
+            "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Estonia", "Ethiopia", "Fiji", "Finland",
+            "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
+            "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland",
+            "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+            "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar",
+            "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia"
+        ];
         
         const select = document.getElementById('country-list');
         countries.forEach(c => { let o = document.createElement('option'); o.text = c; select.add(o); });
