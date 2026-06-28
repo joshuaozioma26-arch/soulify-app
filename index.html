@@ -6,94 +6,66 @@
     <title>Soulify</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0b0914; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        .app-view { display: none; width: 100%; max-width: 400px; padding: 20px; text-align: center; }
-        .active-view { display: flex; flex-direction: column; align-items: center; }
+        body { background-color: #000; color: #fff; height: 100vh; overflow: hidden; }
         
-        .btn { background: #161224; border: 1px solid #231d3a; color: white; padding: 15px; margin: 8px 0; width: 100%; border-radius: 12px; cursor: pointer; font-weight: 600; }
-        .select-box { background: #161224; border: 1px solid #231d3a; color: #a384ff; padding: 15px; width: 100%; border-radius: 12px; font-size: 16px; margin-top: 20px; text-align: center; }
-        .big-btn { background: #a384ff; color: black; padding: 15px; width: 100%; border-radius: 25px; border: none; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        /* Full screen card container */
+        .card-container { position: relative; width: 100%; height: 100vh; }
+        .profile-bg { width: 100%; height: 100%; object-fit: cover; }
         
-        .card { width: 100%; height: 400px; background: #222; border-radius: 20px; position: relative; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500'); background-size: cover; background-position: center; }
-        .vip-banner { background: linear-gradient(135deg, #2c1a4d, #170d29); border: 2px solid #d4af37; padding: 20px; border-radius: 20px; margin-top: 20px; width: 100%; }
+        /* Top Story Bars */
+        .story-bars { position: absolute; top: 15px; left: 10px; right: 10px; display: flex; gap: 5px; z-index: 10; }
+        .bar { height: 3px; flex: 1; background: rgba(255,255,255,0.3); border-radius: 2px; }
         
-        .nav { position: fixed; bottom: 0; width: 100%; max-width: 400px; display: flex; justify-content: space-around; background: #161224; padding: 15px; border-top: 1px solid #231d3a; cursor: pointer; font-size: 24px; }
+        /* Info Overlay */
+        .info-overlay { position: absolute; bottom: 140px; left: 20px; z-index: 10; }
+        .name-row { font-size: 32px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .verified { color: #2196f3; font-size: 24px; }
+        
+        /* Action Row (5 Buttons) */
+        .action-row { position: absolute; bottom: 70px; width: 100%; display: flex; justify-content: center; gap: 15px; z-index: 10; }
+        .btn { width: 55px; height: 55px; border-radius: 50%; border: 1px solid #333; background: #111; color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        
+        /* Bottom Navigation (5 Icons) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; background: #000; border-top: 1px solid #222; z-index: 100; }
+        .nav-icon { font-size: 24px; color: #555; }
+        .nav-icon.active { color: #fe3c72; }
     </style>
 </head>
 <body>
 
-    <!-- 1. Language -->
-    <div class="app-view active-view" id="view-lang">
-        <h2>Select Language</h2>
-        <button class="btn" onclick="show('country')">English</button>
-        <button class="btn" onclick="show('country')">Español</button>
+<div class="card-container">
+    <!-- Story Bars -->
+    <div class="story-bars">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
     </div>
 
-    <!-- 2. Country (100) -->
-    <div class="app-view" id="view-country">
-        <h2>Select Country</h2>
-        <select id="country-list" class="select-box"></select>
-        <button class="big-btn" onclick="show('discover')">Continue</button>
+    <!-- Image -->
+    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" class="profile-bg">
+    
+    <!-- Info Overlay -->
+    <div class="info-overlay">
+        <div class="name-row">Luna 25 <span class="verified">✓</span></div>
+        <p style="margin-top:5px;">😍 Looking for: Long-term, open to short</p>
     </div>
 
-    <!-- 3. Discover -->
-    <div class="app-view" id="view-discover">
-        <div class="card"></div>
-        <h3 style="margin-top:15px;">Sarah, 24</h3>
-        <div class="nav">
-            <span onclick="show('discover')">🔥</span>
-            <span onclick="show('chat')">💬</span>
-            <span onclick="show('profile')">👤</span>
-        </div>
+    <!-- 5 Action Buttons -->
+    <div class="action-row">
+        <button class="btn">🔄</button>
+        <button class="btn" style="color:#ff4757;">✕</button>
+        <button class="btn" style="color:#29b6f6;">★</button>
+        <button class="btn" style="color:#2ed573;">💚</button>
+        <button class="btn" style="color:#b388ff;">⚡</button>
     </div>
+</div>
 
-    <!-- 4. Chat -->
-    <div class="app-view" id="view-chat">
-        <h2>Messages</h2>
-        <div class="btn">No matches yet. Keep swiping!</div>
-        <div class="nav">
-            <span onclick="show('discover')">🔥</span>
-            <span onclick="show('chat')">💬</span>
-            <span onclick="show('profile')">👤</span>
-        </div>
-    </div>
+<!-- 5 Icon Navigation -->
+<nav class="bottom-nav">
+    <div class="nav-icon active">🔥</div>
+    <div class="nav-icon">🔍</div>
+    <div class="nav-icon">✨</div>
+    <div class="nav-icon">💬</div>
+    <div class="nav-icon">👤</div>
+</nav>
 
-    <!-- 5. Profile & Gold -->
-    <div class="app-view" id="view-profile">
-        <h3>Alex, 18</h3>
-        <div class="vip-banner">
-            <h3 style="color:#d4af37;">Soulify GOLD</h3>
-            <p style="font-size: 14px; margin: 10px 0;">See who likes you & unlock Top Picks!</p>
-            <button class="big-btn" style="background:#d4af37;">UPGRADE</button>
-        </div>
-        <div class="nav">
-            <span onclick="show('discover')">🔥</span>
-            <span onclick="show('chat')">💬</span>
-            <span onclick="show('profile')">👤</span>
-        </div>
-    </div>
-
-    <script>
-        const countries = [
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
-            "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
-            "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Chad",
-            "Chile", "China", "Colombia", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark",
-            "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Estonia", "Ethiopia", "Fiji", "Finland",
-            "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
-            "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland",
-            "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
-            "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar",
-            "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia"
-        ];
-        
-        const select = document.getElementById('country-list');
-        countries.forEach(c => { let o = document.createElement('option'); o.text = c; select.add(o); });
-
-        function show(id) {
-            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active-view'));
-            document.getElementById('view-' + id).classList.add('active-view');
-        }
-    </script>
 </body>
 </html>
