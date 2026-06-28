@@ -74,15 +74,20 @@
         .user-avatar-container { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #a384ff; overflow: hidden; cursor: pointer; user-select: none; }
         .user-avatar-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Form Controls for Profile Editing Panel */
-        .edit-profile-box { background: #1f1933; padding: 15px; border-radius: 12px; border: 1px solid #362b55; margin-top: 15px; width: 100%; }
+        /* Hidden Edit Profile Panel Styling */
+        .edit-profile-box { display: none; background: #1f1933; padding: 15px; border-radius: 12px; border: 1px solid #362b55; margin-top: 12px; width: 100%; }
         .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
         .form-group label { font-size: 12px; color: #b5aed4; font-weight: 500; text-align: left; }
-        .form-control { background: #120e22; border: 1px solid #362b55; border-radius: 8px; padding: 10px; color: white; font-size: 13px; outline: none; }
+        .form-control { background: #120e22; border: 1px solid #362b55; border-radius: 8px; padding: 10px; color: white; font-size: 13px; outline: none; width: 100%; height: 42px; }
         .form-control:focus { border-color: #a384ff; }
         
-        .flex-row { display: flex; gap: 10px; }
-        .flex-row .form-group { flex: 1; }
+        /* Side-by-Side Rows Layout */
+        .flex-row { display: flex; gap: 12px; width: 100%; }
+        .flex-row .form-group { flex: 1; min-width: 0; }
+        
+        /* Custom Upload Styling */
+        .gallery-upload-btn { background-color: #120e22; border: 1px dashed #585075; border-radius: 8px; padding: 12px; color: #b5aed4; font-size: 13px; text-align: center; cursor: pointer; }
+        .gallery-upload-btn:active { background-color: #1f1933; }
         
         .logout-btn { background: #26171f; color: #ff4b4b; border: 1px solid #522331; padding: 12px; border-radius: 25px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; }
     </style>
@@ -96,7 +101,7 @@
     </div>
 
     <!-- VIEW 1: DISCOVER SCREEN -->
-    <div class="app-view active-view" id="view-discover">
+    <div class="app-view" id="view-discover">
         <div class="profile-card" id="activeCard">
             <div class="photo-area">
                 <img id="profile-picture" class="profile-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" alt="Profile Image">
@@ -147,7 +152,7 @@
     </div>
 
     <!-- VIEW 4: USER PROFILE SETUP SCREEN -->
-    <div class="app-view" id="view-profile">
+    <div class="app-view active-view" id="view-profile">
         <div class="center-notice" id="authenticated-profile-shell" style="width:100%; max-width:340px; text-align: left; background:#161224; padding:20px; border-radius:15px; border:1px solid #231d3a;">
             <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
                 <div class="user-avatar-container" onclick="triggerAdminTap()">
@@ -159,21 +164,25 @@
                 </div>
             </div>
 
-            <!-- SIMULATION TEST TRIGGER TO BECOME VIP INSTANTLY -->
             <button class="view-premium-btn" style="width:100%; margin-bottom:8px; background:linear-gradient(135deg, #ff4b4b, #cf2323);" onclick="simulateVipUpgrade()">
                 🚀 Simulate VIP Status (Test)
             </button>
-            <button class="view-premium-btn" style="width:100%; background:#251d3a; border:1px solid #3c315e;" onclick="triggerPaywallPopup('👑 Status Manager', 'View real store links.')">
+            <button class="view-premium-btn" style="width:100%; margin-bottom:8px; background:#251d3a; border:1px solid #3c315e;" onclick="triggerPaywallPopup('👑 Status Manager', 'View real store links.')">
                 View Selar Links Portal
             </button>
+            
+            <!-- NEW INTERACTIVE EDIT TOGGLE BUTTON -->
+            <button class="view-premium-btn" style="width:100%; background:#362b55; color:#a384ff; border:1px solid #4d3e78;" onclick="toggleEditForm()">
+                ✏️ Edit Profile Info
+            </button>
 
-            <!-- EDIT PROFILE INPUT BLOCK -->
-            <div class="edit-profile-box">
-                <h4 style="color:white; font-size:14px; margin-bottom:12px; border-bottom:1px solid #362b55; padding-bottom:6px;">✏️ Edit Profile Info</h4>
+            <!-- EDIT PROFILE INPUT BLOCK (HIDDEN BY DEFAULT NOW) -->
+            <div class="edit-profile-box" id="edit-profile-panel">
+                <h4 style="color:white; font-size:14px; margin-bottom:12px; border-bottom:1px solid #362b55; padding-bottom:6px;">✏️ Update Account Details</h4>
                 
                 <div class="form-group">
                     <label>Profile Name</label>
-                    <input type="text" id="edit-name" class="form-control" value="Alex">
+                    <input type="text" id="edit-name" class="form-control" value="Danny">
                 </div>
 
                 <div class="flex-row">
@@ -191,24 +200,38 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Country</label>
-                    <input type="text" id="edit-country" class="form-control" value="Nigeria">
+                <div class="flex-row">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="edit-country" class="form-control" onchange="updateStateDropdown()">
+                            <option value="">Select Country</option>
+                            <option value="Nigeria">Nigeria</option>
+                            <option value="United States">United States</option>
+                            <option value="United Kingdom">United Kingdom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>State / Region</label>
+                        <select id="edit-state" class="form-control">
+                            <option value="">Choose State</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Photo Source URL</label>
-                    <input type="text" id="edit-photo" class="form-control" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop">
+                    <label>Upload Good Photo</label>
+                    <input type="file" id="edit-photo-file" accept="image/*" style="display: none;" onchange="handleImageSelection(this)">
+                    <div class="gallery-upload-btn" onclick="document.getElementById('edit-photo-file').click()">
+                        🖼️ Tap to Choose from Gallery
+                    </div>
                 </div>
 
                 <button class="view-premium-btn" style="width:100%; font-size:13px; padding:10px;" onclick="saveProfileChanges()">Save Form Updates</button>
             </div>
 
-            <!-- LOGOUT SIMULATOR CALL-TO-ACTION -->
             <button class="logout-btn" onclick="executeAppLogout()">🚪 Log Out Session</button>
         </div>
 
-        <!-- UN-AUTHENTICATED SYSTEM VIEW WRAPPER -->
         <div class="center-notice" id="unauthenticated-profile-shell" style="display:none;">
             <div class="center-icon">🔑</div>
             <div class="center-title">Session Terminated</div>
@@ -251,7 +274,6 @@
         <div class="paywall-title" id="paywallTitle">⏱️ Action Locked</div>
         <p class="paywall-text" id="paywallText">Upgrade your tier to destroy timing loops, view matches, and communicate globally.</p>
         
-        <!-- PREMIUM PORTAL -->
         <div class="tier-section">
             <div class="tier-heading">⭐ Soulify Premium</div>
             <div class="links-grid">
@@ -261,7 +283,6 @@
             </div>
         </div>
 
-        <!-- VIP PORTAL -->
         <div class="tier-section">
             <div class="tier-heading vip-heading">👑 Soulify VIP Elite</div>
             <div class="links-grid">
@@ -274,13 +295,20 @@
 
     <!-- Footer Menu Navigation Bar -->
     <div class="bottom-nav">
-        <div class="nav-item active" id="btn-discover" onclick="switchTab('discover')"><span class="nav-icon">🔥</span>Discover</div>
+        <div class="nav-item" id="btn-discover" onclick="switchTab('discover')"><span class="nav-icon">🔥</span>Discover</div>
         <div class="nav-item" id="btn-likes" onclick="switchTab('likes')"><span class="nav-icon">❤️</span>Likes</div>
         <div class="nav-item" id="btn-matches" onclick="switchTab('matches')"><span class="nav-icon">💬</span>Matches</div>
-        <div class="nav-item" id="btn-profile" onclick="switchTab('profile')"><span class="nav-icon">👤</span>Profile</div>
+        <div class="nav-item active" id="btn-profile" onclick="switchTab('profile')"><span class="nav-icon">👤</span>Profile</div>
     </div>
 
     <script>
+        // Location Matrix Dataset
+        const locationData = {
+            "Nigeria": ["Lagos", "Abuja", "Rivers", "Oyo", "Kano", "Kaduna", "Anambra", "Enugu", "Delta", "Ogun"],
+            "United States": ["California", "New York", "Texas", "Florida", "Illinois", "Georgia", "Pennsylvania"],
+            "United Kingdom": ["England", "Scotland", "Wales", "Northern Ireland"]
+        };
+
         const simulatedUsers = [
             { name: "Sarah, 24", bio: "Love traveling, music, and finding deep connections. Let's chat instantly!", pic: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" },
             { name: "David, 26", bio: "Software engineer by day, explorer by night. Tell me your favorite movie.", pic: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop" },
@@ -294,6 +322,17 @@
         let isChatActive = false;
         let isVipUser = false;
         let adminTapCount = 0;
+        let loadedImageBase64 = "";
+
+        // TOGGLE EDIT FORM DISPLAY STATUS
+        function toggleEditForm() {
+            const formBox = document.getElementById('edit-profile-panel');
+            if (formBox.style.display === "block") {
+                formBox.style.display = "none";
+            } else {
+                formBox.style.display = "block";
+            }
+        }
 
         function switchTab(tabName) {
             document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active-view'));
@@ -355,14 +394,41 @@
             document.getElementById('adminPanel').style.display = 'none';
         }
 
-        // EDIT PROFILE VALIDATION AND EXECUTION ENGINE
+        function handleImageSelection(inputElement) {
+            const selectedFile = inputElement.files[0];
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    loadedImageBase64 = e.target.result;
+                    alert("✅ Good photo loaded successfully from your gallery!");
+                };
+                reader.readAsDataURL(selectedFile);
+            }
+        }
+
+        function updateStateDropdown() {
+            const countrySelect = document.getElementById('edit-country');
+            const stateSelect = document.getElementById('edit-state');
+            const chosenCountry = countrySelect.value;
+            
+            stateSelect.innerHTML = '<option value="">Choose State</option>';
+            
+            if (chosenCountry && locationData[chosenCountry]) {
+                locationData[chosenCountry].forEach(state => {
+                    const opt = document.createElement('option');
+                    opt.value = state;
+                    opt.textContent = state;
+                    stateSelect.appendChild(opt);
+                });
+            }
+        }
+
         function saveProfileChanges() {
             let nameInput = document.getElementById('edit-name').value;
             let ageInput = document.getElementById('edit-age').value;
-            let photoInput = document.getElementById('edit-photo').value;
             let countryInput = document.getElementById('edit-country').value;
+            let stateInput = document.getElementById('edit-state').value;
 
-            // Reject crown or star icons using regular expression check
             const forbiddenEmojis = /[\u{1F451}\u{2B50}\u{2605}\u{1F31F}\u{2728}]/u; 
             
             if (forbiddenEmojis.test(nameInput)) {
@@ -375,15 +441,24 @@
                 return;
             }
 
-            // Apply updates dynamically onto your active user element layers
+            if(countryInput === "" || stateInput === "") {
+                alert("Please pick both your Country and your State/Province location.");
+                return;
+            }
+
             let currentSuffix = isVipUser ? " 👑" : "";
             document.getElementById('user-display-title').innerText = `${nameInput}, ${ageInput}${currentSuffix}`;
-            document.getElementById('my-avatar-display').src = photoInput;
             
-            alert(`Profile details updated! Country set to ${countryInput}.`);
+            if (loadedImageBase64 !== "") {
+                document.getElementById('my-avatar-display').src = loadedImageBase64;
+            }
+            
+            alert(`Profile details updated! Location locked to ${stateInput}, ${countryInput}.`);
+            
+            // Clean up view: Hide form box smoothly after saving setup parameters
+            document.getElementById('edit-profile-panel').style.display = "none";
         }
 
-        // RECONSTRUCT LOGOUT COMMAND LOOPS
         function executeAppLogout() {
             if(confirm("Are you sure you want to log out of your profile session?")) {
                 document.getElementById('authenticated-profile-shell').style.display = 'none';
