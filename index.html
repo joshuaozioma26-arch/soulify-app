@@ -3,316 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Soulify Premium</title>
+    <title>Soulify</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0b0914; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         
-        /* Soulify Signature Deep Purple Palette */
-        body { background-color: #0b0914; color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; overflow-y: auto; -webkit-tap-highlight-color: transparent; }
+        .app-view { display: none; width: 100%; max-width: 400px; padding: 20px; text-align: center; }
+        .active-view { display: flex; flex-direction: column; align-items: center; }
         
-        /* App Header Layout */
-        .app-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background-color: #161224; border-bottom: 1px solid #231d3a; position: sticky; top: 0; z-index: 50; }
-        .logo-area { display: flex; align-items: center; gap: 8px; color: #a384ff; font-size: 20px; font-weight: 700; }
+        .btn { background: #161224; border: 1px solid #231d3a; color: white; padding: 15px; margin: 8px 0; width: 100%; border-radius: 12px; cursor: pointer; font-weight: 600; }
+        .select-box { background: #161224; border: 1px solid #231d3a; color: #a384ff; padding: 15px; width: 100%; border-radius: 12px; font-size: 16px; margin-top: 20px; text-align: center; }
+        .big-btn { background: #a384ff; color: black; padding: 15px; width: 100%; border-radius: 25px; border: none; font-weight: bold; margin-top: 20px; cursor: pointer; }
         
-        /* Screen View Engine Panels */
-        .app-view { display: none; flex-direction: column; padding: 20px; justify-content: flex-start; align-items: center; margin-bottom: 75px; width: 100%; }
-        .app-view.active-view { display: flex; }
-
-        /* Full Screen Swiper Card Interface (Screenshot_20260628_014735) */
-        .profile-card { background: #161224; border-radius: 24px; width: 100%; max-width: 380px; height: 520px; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 1px solid #231d3a; }
-        .photo-area { position: relative; flex: 1; background-color: #0b0914; overflow: hidden; }
-        .profile-img { width: 100%; height: 100%; object-fit: cover; }
-        .info-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(11, 9, 20, 0.95)); padding: 25px 20px; }
-        .user-name { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
-        .location-tag { font-size: 13px; color: #b5aed4; margin-bottom: 8px; }
-        .user-bio { font-size: 14px; color: #e1e1e6; line-height: 1.4; }
-
-        /* Floating Circular Controller Row (Screenshot_20260628_014735) */
-        .action-row { display: flex; justify-content: center; gap: 15px; position: absolute; bottom: 85px; width: 100%; z-index: 10; padding: 0 20px; }
-        .circular-btn { width: 56px; height: 56px; border-radius: 50%; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 22px; transition: 0.2s; background: rgba(37, 29, 58, 0.85); backdrop-filter: blur(10px); border: 1px solid #3c315e; color: white; }
-        .circular-btn:active { transform: scale(0.9); }
-        .btn-dislike { color: #ff477e; }
-        .btn-like { color: #23cf5c; }
-
-        /* Multi-step Registration Progress Top Indicator Segment Bars (Screenshot_20260628_015051) */
-        .progress-container { display: flex; gap: 6px; width: 100%; max-width: 340px; margin-bottom: 25px; }
-        .progress-bar { height: 4px; flex: 1; background-color: #251d3a; border-radius: 2px; }
-        .progress-bar.active { background-color: #a384ff; }
-
-        /* Onboarding Form Blocks (Screenshot_20260628_015051) */
-        .section-title { font-size: 14px; text-transform: uppercase; color: #b5aed4; letter-spacing: 0.5px; margin-bottom: 12px; align-self: flex-start; font-weight: 600; width: 100%; max-width: 340px; }
-        .form-block { background: #161224; border-radius: 16px; padding: 14px 18px; width: 100%; max-width: 340px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #231d3a; }
-        .form-block label { font-size: 15px; color: #ffffff; font-weight: 500; }
-        
-        /* Pill Switches (Screenshot_20260628_015051) */
-        .pill-toggle { display: flex; background: #0b0914; border-radius: 20px; padding: 2px; border: 1px solid #231d3a; width: 160px; }
-        .pill-btn { flex: 1; border: none; background: transparent; color: #585075; padding: 6px 0; font-size: 13px; font-weight: 600; border-radius: 18px; cursor: pointer; text-align: center; }
-        .pill-btn.active { background: #251d3a; color: #a384ff; border: 1px solid #3c315e; }
-
-        /* Text Input Controls */
-        .premium-input { background: transparent; border: none; color: #a384ff; font-size: 16px; font-weight: 600; text-align: right; outline: none; width: 50%; }
-        .premium-select { background: transparent; border: none; color: #a384ff; font-size: 15px; font-weight: 600; outline: none; text-align: right; cursor: pointer; direction: rtl; }
-        .premium-select option { background-color: #161224; color: white; }
-
-        /* Premium Large Action Navigation Button Container Layout */
-        .dategram-btn { background: #a384ff; color: #000000; border: none; padding: 16px; border-radius: 24px; width: 100%; max-width: 340px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(163, 132, 255, 0.2); }
-        .dategram-btn:active { transform: scale(0.98); }
-
-        /* Bottom Minimalist Navigation Layout Bar (Screenshot_20260628_014822) */
-        .bottom-nav { background-color: #161224; height: 68px; display: flex; border-top: 1px solid #231d3a; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #585075; text-decoration: none; position: relative; cursor: pointer; }
-        .nav-item.active { color: #a384ff; }
-        .nav-icon { font-size: 24px; }
-        .nav-badge { position: absolute; top: 14px; right: 30%; background: #ff477e; width: 8px; height: 8px; border-radius: 50%; }
-
-        /* Premium Top Action Store Banner Bar (Screenshot_20260628_014822) */
-        .activation-banner { background: #161224; border-radius: 16px; padding: 15px; width: 100%; max-width: 340px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border: 1px solid #231d3a; }
-        .banner-trigger-btn { background: #ff477e; color: white; border: none; padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; }
-
-        /* Paywall Screens Overlay Panels layout modal */
-        .paywall-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 9, 20, 0.98); z-index: 100; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
-        .close-paywall { align-self: flex-end; color: #585075; font-size: 24px; cursor: pointer; }
-        .paywall-title { font-size: 22px; color: #ffcd38; margin-top: 20px; margin-bottom: 8px; font-weight: bold; }
-        .payment-link { display: flex; justify-content: space-between; align-items: center; background: #161224; border: 1px solid #231d3a; color: white; text-decoration: none; padding: 15px; border-radius: 14px; font-size: 14px; font-weight: 600; margin-bottom: 10px; width: 100%; max-width: 320px; }
-        
-        .avatar-frame { width: 75px; height: 75px; border-radius: 50%; overflow: hidden; border: 2px solid #a384ff; margin-bottom: 10px; }
-        .avatar-img { width: 100%; height: 100%; object-fit: cover; }
+        .card { width: 100%; height: 450px; background: #222; border-radius: 20px; position: relative; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500'); background-size: cover; background-position: center; }
+        .vip-banner { background: linear-gradient(135deg, #2c1a4d, #170d29); border: 2px solid #d4af37; padding: 20px; border-radius: 20px; margin-top: 20px; width: 100%; }
+        .nav { position: fixed; bottom: 0; width: 100%; max-width: 400px; display: flex; justify-content: space-around; background: #161224; padding: 15px; border-top: 1px solid #231d3a; }
     </style>
 </head>
 <body>
 
-    <!-- Branding Top Interface Header Bar -->
-    <div class="app-header">
-        <div class="logo-area" id="header-logo">💜 Soulify</div>
+    <!-- Language View -->
+    <div class="app-view active-view" id="view-lang">
+        <h2>Select Language</h2>
+        <button class="btn" onclick="show('country')">English</button>
+        <button class="btn" onclick="show('country')">Español</button>
+        <button class="btn" onclick="show('country')">Français</button>
     </div>
 
-    <!-- ONBOARDING FLOW: SCREEN 1 (Personal Info Setup Menu) -->
-    <div class="app-view active-view" id="view-onboarding-1">
-        <div class="progress-container">
-            <div class="progress-bar active"></div>
-            <div class="progress-bar"></div>
-            <div class="progress-bar"></div>
-        </div>
-        
-        <div class="section-title">Personal Info</div>
-        
-        <div class="form-block">
-            <label>Your age</label>
-            <input type="number" id="setup-age" class="premium-input" value="18">
-        </div>
-
-        <div class="form-block">
-            <label>Your gender</label>
-            <div class="pill-toggle">
-                <button class="pill-btn" id="gender-woman" onclick="setGender('Woman')">Woman</button>
-                <button class="pill-btn active" id="gender-man" onclick="setGender('Man')">Man</button>
-            </div>
-        </div>
-
-        <!-- Dropped states/regions completely - Only Country Choice selection list active -->
-        <div class="form-block">
-            <label>Your Country</label>
-            <select id="setup-country" class="premium-select">
-                <option value="Nigeria">Nigeria</option>
-                <option value="United States">United States</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="Colombia">Colombia</option>
-                <option value="Ecuador">Ecuador</option>
-                <option value="Ghana">Ghana</option>
-                <option value="Canada">Canada</option>
-            </select>
-        </div>
-
-        <button class="dategram-btn" onclick="goToStep(2)">Continue</button>
+    <!-- Country View -->
+    <div class="app-view" id="view-country">
+        <h2>Select Country</h2>
+        <select id="country-list" class="select-box"></select>
+        <button class="big-btn" onclick="show('discover')">Continue</button>
     </div>
 
-    <!-- ONBOARDING FLOW: SCREEN 2 (Target Preferences Configuration Panel) -->
-    <div class="app-view" id="view-onboarding-2">
-        <div class="progress-container">
-            <div class="progress-bar active"></div>
-            <div class="progress-bar active"></div>
-            <div class="progress-bar"></div>
-        </div>
-        
-        <div class="section-title">Interests</div>
-
-        <div class="form-block">
-            <label>Looking for</label>
-            <div class="pill-toggle">
-                <button class="pill-btn active" id="seek-woman" onclick="setSeeking('Woman')">Woman</button>
-                <button class="pill-btn" id="seek-man" onclick="setSeeking('Man')">Man</button>
-            </div>
-        </div>
-
-        <div class="form-block">
-            <label>Age range</label>
-            <select id="setup-range" class="premium-select">
-                <option value="18 - 25">18 - 25</option>
-                <option value="26 - 33">26 - 33</option>
-                <option value="34 - 45">34 - 45</option>
-            </select>
-        </div>
-
-        <button class="dategram-btn" onclick="goToStep(3)">Continue</button>
-    </div>
-
-    <!-- ONBOARDING FLOW: SCREEN 3 (AI Match Engine Processing screen animation) -->
-    <div class="app-view" id="view-onboarding-3">
-        <div class="progress-container">
-            <div class="progress-bar active"></div>
-            <div class="progress-bar active"></div>
-            <div class="progress-bar active"></div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 40px; max-width: 300px;">
-            <div style="font-size: 60px; margin-bottom: 20px;">✨</div>
-            <h3 style="font-size: 20px; margin-bottom: 10px;">5 profiles selected for you by AI</h3>
-            <p style="color: #b5aed4; font-size: 14px; margin-bottom: 30px; line-height: 1.4;">Our matchmaking engine located highly compatible accounts within your selected country parameters.</p>
-            <button class="dategram-btn" onclick="finalizeSetup()">Continue to App</button>
-        </div>
-    </div>
-
-    <!-- INTERFACE MAIN VIEW 1: ACTIVE DISCOVER SWIPING CARD MODULE -->
+    <!-- Discover View -->
     <div class="app-view" id="view-discover">
-        <div class="profile-card">
-            <div class="photo-area">
-                <img id="profile-picture" class="profile-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" alt="Discovery Image">
-                <div class="info-overlay">
-                    <h2 class="user-name" id="profile-name">Sarah, 24</h2>
-                    <div class="location-tag">📍 <span id="profile-location">Nigeria</span></div>
-                    <p class="user-bio" id="profile-bio">Love traveling, music, and finding deep connections. Let's talk!</p>
-                </div>
-            </div>
-        </div>
-        <div class="action-row">
-            <button class="circular-btn" style="color: #585075;" onclick="nextCard()">🔄</button>
-            <button class="circular-btn btn-dislike" onclick="nextCard()">✕</button>
-            <button class="circular-btn btn-like" onclick="nextCard()">💜</button>
+        <div class="card"></div>
+        <div style="margin-top:15px; font-size: 20px; font-weight: bold;">Sarah, 24</div>
+        <div class="nav">
+            <span onclick="show('discover')">🔥</span>
+            <span onclick="show('profile')">👤</span>
         </div>
     </div>
 
-    <!-- INTERFACE MAIN VIEW 2: LIKES LOGGED VAULT SECURE WALL -->
-    <div class="app-view" id="view-likes">
-        <div style="text-align: center; margin-top: 50px;">
-            <div style="font-size: 50px; margin-bottom: 15px;">🔒</div>
-            <h3 style="font-size: 18px; margin-bottom: 8px;">Likes Portal Blurred</h3>
-            <p style="color: #b5aed4; font-size: 13px; margin-bottom: 20px; max-width: 280px;">Unlock VIP Elite access to instantly lift the filter and see who is waiting.</p>
-            <button class="dategram-btn" style="padding: 12px 25px; font-size: 14px;" onclick="openPaywall('❤️ Likes Portal Unlocked', 'See your matches.')">Unlock VIP Elite</button>
-        </div>
-    </div>
-
-    <!-- INTERFACE MAIN VIEW 3: ACTIVE CHAT CONSTRAINED LIST CHANNELS -->
-    <div class="app-view" id="view-matches">
-        <div style="text-align: center; margin-top: 50px;">
-            <div style="font-size: 45px; margin-bottom: 15px;">💬</div>
-            <h3 style="font-size: 18px; margin-bottom: 8px;">No Active Messages</h3>
-            <p style="color: #b5aed4; font-size: 13px; margin-bottom: 20px; max-width: 280px;">Conversations are subject to an immediate 20-minute restriction cycle window.</p>
-        </div>
-    </div>
-
-    <!-- INTERFACE MAIN VIEW 4: MASTER HUB CORE PROFILE SETUP PARAMETERS -->
+    <!-- Profile View -->
     <div class="app-view" id="view-profile">
-        <div class="activation-banner">
-            <div>
-                <h4 style="font-size: 15px; color: #ff477e;">Soulify Premium VIP</h4>
-                <p style="font-size: 12px; color: #b5aed4; margin-top: 2px;">Deactivate timing limitations</p>
-            </div>
-            <button class="banner-trigger-btn" onclick="openPaywall('👑 Access Premium', 'Deactivate all constraints loop parameters.')">Activate</button>
+        <h3>Alex, 18</h3>
+        <div class="vip-banner">
+            <h3 style="color:#d4af37;">Soulify GOLD</h3>
+            <p style="font-size: 14px; margin: 10px 0;">Unlock Top Picks & See Who Likes You</p>
+            <button class="big-btn" style="background:#d4af37;">UPGRADE</button>
         </div>
-
-        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 25px;">
-            <div class="avatar-frame">
-                <img class="avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop" alt="Avatar User">
-            </div>
-            <h2 style="font-size: 22px; font-weight: 700;" id="user-core-title">Alex, 18</h2>
-            <p style="color: #b5aed4; font-size: 13px; margin-top: 4px;" id="user-core-location">Nigeria</p>
+        <div class="nav">
+            <span onclick="show('discover')">🔥</span>
+            <span onclick="show('profile')">👤</span>
         </div>
-
-        <button class="dategram-btn" style="background:#251d3a; color:white; border:1px solid #3c315e;" onclick="location.reload()">Reset Setup Flow</button>
-    </div>
-
-    <!-- GLOBAL STORE MONETIZATION BANNER CHANNELS MODAL -->
-    <div class="paywall-modal" id="paywallScreen">
-        <div class="close-paywall" onclick="document.getElementById('paywallScreen').style.display='none'">✕</div>
-        <div class="paywall-title" id="paywallTitle">👑 Premium Plan</div>
-        <p style="color: #b5aed4; font-size: 14px; margin-bottom: 25px; text-align: center;" id="paywallText">Unlock system channels access immediately.</p>
-        
-        <a href="https://selar.com/h3k5rsum22" class="payment-link" target="_blank"><span>Weekly Premium Plan</span> <span style="color:#a384ff;">₦8,255</span></a>
-        <a href="https://selar.com/5j6778i289" class="payment-link" target="_blank"><span>Monthly Special VIP</span> <span style="color:#a384ff;">₦20,655</span></a>
-        <a href="https://selar.com/ab80462892" class="payment-link" target="_blank"><span>VIP Elite Weekly Access</span> <span style="color:#a384ff;">₦12,500</span></a>
-    </div>
-
-    <!-- App Bottom Interface Grid Menu Navigation Bar (Hidden during setup) -->
-    <div class="bottom-nav" id="main-navigation-panel" style="display: none;">
-        <div class="nav-item active" id="btn-discover" onclick="switchTab('discover')"><span class="nav-icon">🎴</span></div>
-        <div class="nav-item" id="btn-likes" onclick="switchTab('likes')"><span class="nav-icon">🖤</span><div class="nav-badge"></div></div>
-        <div class="nav-item" id="btn-matches" onclick="switchTab('matches')"><span class="nav-icon">💬</span></div>
-        <div class="nav-item" id="btn-profile" onclick="switchTab('profile')"><span class="nav-icon">👤</span></div>
     </div>
 
     <script>
-        const discoveryStack = [
-            { name: "Sarah, 24", loc: "Nigeria", bio: "Love traveling, music, and finding deep connections.", pic: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop" },
-            { name: "Karol Vanesa, 22", loc: "Colombia", bio: "Dancing, coffee exploration, and late night conversation channels.", pic: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&auto=format&fit=crop" },
-            { name: "David, 26", loc: "United States", bio: "Software design developer by day, music producer loops by night.", pic: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop" }
-        ];
+        const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Chad", "Chile", "China", "Colombia", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta"];
+        
+        const select = document.getElementById('country-list');
+        countries.forEach(c => { let o = document.createElement('option'); o.text = c; select.add(o); });
 
-        let currentCardIndex = 0;
-        let registrationGender = "Man";
-        let registrationSeeking = "Woman";
-
-        function setGender(type) {
-            registrationGender = type;
-            document.getElementById('gender-woman').classList.remove('active');
-            document.getElementById('gender-man').classList.remove('active');
-            document.getElementById(`gender-${type.toLowerCase()}`).classList.add('active');
-        }
-
-        function setSeeking(type) {
-            registrationSeeking = type;
-            document.getElementById('seek-woman').classList.remove('active');
-            document.getElementById('seek-man').classList.remove('active');
-            document.getElementById(`seek-${type.toLowerCase()}`).classList.add('active');
-        }
-
-        function goToStep(stepNumber) {
+        function show(id) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active-view'));
-            document.getElementById(`view-onboarding-${stepNumber}`).classList.add('active-view');
-        }
-
-        function finalizeSetup() {
-            const chosenAge = document.getElementById('setup-age').value;
-            const chosenCountry = document.getElementById('setup-country').value;
-            
-            document.getElementById('user-core-title').innerText = `Alex, ${chosenAge}`;
-            document.getElementById('user-core-location').innerText = chosenCountry;
-            
-            document.getElementById('main-navigation-panel').style.display = 'flex';
-            switchTab('discover');
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active-view'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(`view-${tabId}`).classList.add('active-view');
-            document.getElementById(`btn-${tabId}`).classList.add('active');
-        }
-
-        function nextCard() {
-            currentCardIndex = (currentCardIndex + 1) % discoveryStack.length;
-            document.getElementById('profile-name').innerText = discoveryStack[currentCardIndex].name;
-            document.getElementById('profile-location').innerText = discoveryStack[currentCardIndex].loc;
-            document.getElementById('profile-bio').innerText = discoveryStack[currentCardIndex].bio;
-            document.getElementById('profile-picture').src = discoveryStack[currentCardIndex].pic;
-        }
-
-        function openPaywall(title, text) {
-            document.getElementById('paywallTitle').innerText = title;
-            document.getElementById('paywallText').innerText = text;
-            document.getElementById('paywallScreen').style.display = 'flex';
+            document.getElementById('view-' + id).classList.add('active-view');
         }
     </script>
 </body>
 </html>
-                                        
