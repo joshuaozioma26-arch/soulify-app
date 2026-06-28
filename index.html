@@ -1,89 +1,253 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Soulify</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0b0914; color: #ffffff; height: 100vh; overflow: hidden; }
-        
-        .app-view { display: none; height: 100vh; width: 100%; position: relative; }
-        .active-view { display: block; }
+Sally B:
+import { useState, useEffect, useRef } from "react";
 
-        /* Discover Card */
-        .card-container { width: 100%; height: 100vh; position: relative; }
-        .card-img { width: 100%; height: 100%; object-fit: cover; }
-        .card-overlay { position: absolute; bottom: 0; width: 100%; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); }
-        
-        /* Actions */
-        .action-bar { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
-        .btn { width: 55px; height: 55px; border-radius: 50%; border: 1px solid #333; background: #111; color: #fff; font-size: 20px; cursor: pointer; }
-        
-        /* Profile & VIP */
-        .profile-section { padding: 20px; text-align: center; }
-        .vip-banner { background: #161224; border: 1px solid #d4af37; padding: 20px; border-radius: 15px; margin-top: 20px; }
-        
-        /* Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 65px; display: flex; justify-content: space-around; align-items: center; background: #0b0914; border-top: 1px solid #231d3a; }
-        .nav-item { cursor: pointer; font-size: 24px; color: #585075; }
-        .nav-item.active { color: #a384ff; }
-    </style>
-</head>
-<body>
+// ─── MOCK DATA ───────────────────────────────────────────────────────────────
+const MOCK_PROFILES = [
+  { id: 1, name: "Sophia", age: 24, city: "Lagos", distance: "2 km", match: 91, photos: ["https://randomuser.me/api/portraits/women/44.jpg","https://randomuser.me/api/portraits/women/45.jpg"], online: true, bio: "Love sunsets and good coffee ☕", verified: true },
+  { id: 2, name: "Amara", age: 27, city: "Accra", distance: "5 km", match: 87, photos: ["https://randomuser.me/api/portraits/women/65.jpg"], online: false, bio: "Traveler. Foodie. Dog lover 🐶", verified: false },
+  { id: 3, name: "Isabella", age: 22, city: "Nairobi", distance: "8 km", match: 83, photos: ["https://randomuser.me/api/portraits/women/32.jpg","https://randomuser.me/api/portraits/women/33.jpg"], online: true, bio: "Music is my soul 🎵", verified: false },
+  { id: 4, name: "Fatima", age: 29, city: "Cairo", distance: "12 km", match: 79, photos: ["https://randomuser.me/api/portraits/women/50.jpg"], online: true, bio: "Bookworm & adventure seeker 📚", verified: true },
+  { id: 5, name: "Grace", age: 25, city: "Abuja", distance: "3 km", match: 75, photos: ["https://randomuser.me/api/portraits/women/68.jpg"], online: false, bio: "Dancer. Dreamer. 💃", verified: false },
+];
 
-    <!-- DISCOVER VIEW -->
-    <div id="view-discover" class="app-view active-view">
-        <div class="card-container">
-            <img class="card-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" alt="profile">
-            <div class="card-overlay">
-                <h2>Sarah, 24 ✓</h2>
-                <p>😍 Looking for: Long-term</p>
-                <div class="action-bar">
-                    <button class="btn">🔄</button>
-                    <button class="btn">✕</button>
-                    <button class="btn">★</button>
-                    <button class="btn">💜</button>
-                    <button class="btn">⚡</button>
-                </div>
+const MOCK_MATCHES = [
+  { id: 1, name: "Sophia", age: 24, photo: "https://randomuser.me/api/portraits/women/44.jpg", online: true, lastMsg: "Hi! I like your profile 😊", time: "2m", unread: 2 },
+  { id: 2, name: "Amara", age: 27, photo: "https://randomuser.me/api/portraits/women/65.jpg", online: false, lastMsg: "We have an 87% match!", time: "1h", unread: 0 },
+  { id: 3, name: "Isabella", age: 22, photo: "https://randomuser.me/api/portraits/women/32.jpg", online: true, lastMsg: "Would love to chat 🎵", time: "3h", unread: 1 },
+];
+
+const NEARBY = [
+  { id: 1, name: "Sophia", photo: "https://randomuser.me/api/portraits/women/44.jpg", distance: "2 km", online: true },
+  { id: 2, name: "Amara", photo: "https://randomuser.me/api/portraits/women/65.jpg", distance: "4 km", online: false },
+  { id: 3, name: "Grace", photo: "https://randomuser.me/api/portraits/women/68.jpg", distance: "5 km", online: true },
+  { id: 4, name: "Fatima", photo: "https://randomuser.me/api/portraits/women/50.jpg", distance: "8 km", online: false },
+  { id: 5, name: "Isabella", photo: "https://randomuser.me/api/portraits/women/32.jpg", distance: "12 km", online: true },
+  { id: 6, name: "Leila", photo: "https://randomuser.me/api/portraits/women/71.jpg", distance: "15 km", online: false },
+];
+
+const ICEBREAKERS = [
+  "What's the best trip you've ever taken?",
+  "Coffee or tea person?",
+  "What's your guilty pleasure show?",
+  "Beach or mountains?",
+  "What song is stuck in your head?",
+];
+
+const PAYMENT_LINKS = {
+  premium: {
+    weekly: { price: "$2.99", url: "https://selar.com/h3k5rsum22" },
+    monthly: { price: "$7.99", url: "https://selar.com/5j6778i289" },
+    quarterly: { price: "$18.99", url: "https://selar.com/1n67028y14" },
+  },
+  vip: {
+    weekly: { price: "$5.99", url: "https://selar.com/ab80462892" },
+    monthly: { price: "$14.99", url: "https://selar.com/0178gq37o0" },
+    quarterly: { price: "$34.99", url: "https://selar.com/2bf57t8d15" },
+  },
+};
+
+// ─── STYLES ──────────────────────────────────────────────────────────────────
+const colors = {
+  bg: "#0e0e14",
+  card: "#16161f",
+  surface: "#1e1e2a",
+  border: "#2a2a3a",
+  pink: "#e040a0",
+  pinkDark: "#b0306e",
+  gold: "#f5c542",
+  purple: "#7c3aed",
+  text: "#f0f0f8",
+  muted: "#8888aa",
+  green: "#22c55e",
+  red: "#ef4444",
+};
+
+const S = {
+  app: { background: colors.bg, minHeight: "100vh", fontFamily: "'Inter', sans-serif", color: colors.text, maxWidth: 430, margin: "0 auto", position: "relative", overflow: "hidden" },
+
+// Nav
+  nav: { position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 430, background: colors.card, borderTop: 1px solid ${colors.border}, display: "flex", justifyContent: "space-around", padding: "10px 0 16px", zIndex: 100 },
+  navBtn: (active) => ({ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, background: "none", border: "none", cursor: "pointer", color: active ? colors.pink : colors.muted, fontSize: 10, fontWeight: active ? 700 : 400, transition: "color 0.2s" }),
+  // Buttons
+  btnPrimary: { background: linear-gradient(135deg, ${colors.pink}, ${colors.pinkDark}), color: "#fff", border: "none", borderRadius: 50, padding: "14px 32px", fontSize: 16, fontWeight: 700, cursor: "pointer", width: "100%", letterSpacing: 0.5 },
+  btnOutline: { background: "none", color: colors.pink, border: 1.5px solid ${colors.pink}, borderRadius: 50, padding: "12px 32px", fontSize: 15, fontWeight: 600, cursor: "pointer", width: "100%" },
+  btnGold: { background: linear-gradient(135deg, ${colors.gold}, #e09000), color: "#000", border: "none", borderRadius: 50, padding: "14px 32px", fontSize: 16, fontWeight: 700, cursor: "pointer", width: "100%" },
+  // Cards
+  card: { background: colors.card, borderRadius: 20, padding: 20, border: 1px solid ${colors.border} },
+  // Input
+  input: { background: colors.surface, border: 1px solid ${colors.border}, borderRadius: 12, padding: "14px 16px", color: colors.text, fontSize: 16, width: "100%", outline: "none", boxSizing: "border-box" },
+  // Tags
+  badge: (color) => ({ background: color, color: "#fff", borderRadius: 20, padding: "3px 10px", fontSize: 11, fontWeight: 700 }),
+  // Match %
+  matchBadge: { background: linear-gradient(135deg, ${colors.purple}, ${colors.pink}), color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: 13, fontWeight: 700 },
+};
+
+// ─── ICONS ───────────────────────────────────────────────────────────────────
+const Icon = ({ name, size = 22, color = "currentColor" }) => {
+  const icons = {
+    flame: <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><path d="M12 2C8 7 6 10 6 14a6 6 0 0012 0c0-2-1-4-2-5-1 2-2 3-4 3 1-3 0-7-2-10z"/></svg>,
+    chat: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>,
+    cards: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><rect x="2" y="4" width="14" height="18" rx="2"/><path d="M8 2h12a2 2 0 012 2v14"/></svg>,
+    pin: <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>,
+    user: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>,
+    heart: <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>,
+    x: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+    star: <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>,
+    crown: <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><path d="M2 19l2-9 4 4 4-8 4 8 4-4 2 9H2z"/></svg>,
+    check: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5}><polyline points="20,6 9,17 4,12"/></svg>,
+
+back: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><polyline points="15,18 9,12 15,6"/></svg>,
+    camera: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>,
+    send: <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>,
+    shield: <svg width={size} height={size} viewBox="0 0 24 24" fill={color}><path d="M12 2L3 7v6c0 5.25 3.75 10.15 9 11.25C17.25 23.15 21 18.25 21 13V7l-9-5z"/></svg>,
+    lock: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>,
+    target: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+    gift: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><polyline points="20,12 20,22 4,22 4,12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>,
+    settings: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>,
+  };
+  return icons[name] || null;
+};
+
+// ─── PHOTO UPLOADER ──────────────────────────────────────────────────────────
+function PhotoUploader() {
+  const [photos, setPhotos] = useState([]);
+  const fileRef = useRef();
+
+  const handleFile = (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(f => {
+      const reader = new FileReader();
+      reader.onload = (ev) => setPhotos(p => [...p, ev.target.result].slice(0, 6));
+      reader.readAsDataURL(f);
+    });
+  };
+
+  return (
+    <div style={{ margin: "0 16px 16px" }}>
+      <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: "none" }} onChange={handleFile}/>
+      {photos.length === 0 ? (
+        <div style={{ background: colors.surface, borderRadius: 16, padding: 16, display: "flex", gap: 12, alignItems: "center", cursor: "pointer", border: 1px dashed ${colors.pink} }} onClick={() => fileRef.current.click()}>
+          <div style={{ background: colors.card, border: 1px solid ${colors.pink}, borderRadius: 12, width: 80, height: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, flexShrink: 0 }}>
+            <div style={{ fontSize: 28, color: colors.pink }}>+</div>
+            <div style={{ fontSize: 10, color: colors.muted }}>Add</div>
+          </div>
+          <div>
+            <div style={{ color: colors.pink, fontWeight: 700, marginBottom: 4 }}>Add your photo</div>
+            <div style={{ color: colors.muted, fontSize: 13 }}>Without a photo, no one will be able to see you</div>
+          </div>
+        </div>
+
+) : (
+        <div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 8 }}>
+            {photos.map((p, i) => (
+              <div key={i} style={{ position: "relative", aspectRatio: "1", borderRadius: 12, overflow: "hidden" }}>
+                <img src={p} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }}/>
+                <button onClick={() => setPhotos(ph => ph.filter((_, j) => j !== i))} style={{ position: "absolute", top: 4, right: 4, background: "#000a", border: "none", borderRadius: "50%", width: 24, height: 24, color: "#fff", cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+              </div>
+            ))}
+            {photos.length < 6 && (
+              <div onClick={() => fileRef.current.click()} style={{ aspectRatio: "1", borderRadius: 12, border: 2px dashed ${colors.pink}, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 28, color: colors.pink }}>+</div>
+            )}
+          </div>
+          <div style={{ color: colors.muted, fontSize: 12, textAlign: "center" }}>{photos.length}/6 photos added</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── CHAT SCREEN (reusable) ───────────────────────────────────────────────────
+function ChatScreen({ person, onBack }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [showIcebreaker, setShowIcebreaker] = useState(false);
+  const [showHello, setShowHello] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const bottomRef = useRef();
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+
+  const send = (text) => {
+    if (!text?.trim()) return;
+    setMessages(m => [...m, { id: Date.now(), from: "me", text, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }]);
+    setInput("");
+    setShowHello(false);
+    setTimeout(() => {
+      const replies = ["That's so interesting! 😊", "Tell me more! 💬", "Haha really? 😄", I'm ${person.age}, nice to meet you! 👋, "We should meet up sometime 😍"];
+      setMessages(m => [...m, { id: Date.now() + 1, from: "them", text: replies[Math.floor(Math.random() * replies.length)], time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }]);
+    }, 1500);
+  };
+
+  const photo = person.photo || person.photos?.[0];
+  const fallback = https://ui-avatars.com/api/?name=${person.name}&background=333&color=fff;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: colors.bg, position: "fixed", inset: 0, zIndex: 50, maxWidth: 430, margin: "0 auto" }}>
+      {/* Header */}
+      <div style={{ background: colors.card, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12, borderBottom: 1px solid ${colors.border}, flexShrink: 0 }}>
+        <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", color: colors.text, padding: 0 }}><Icon name="back" size={24}/></button>
+        <img src={photo} alt="" style={{ width: 42, height: 42, borderRadius: "50%", objectFit: "cover", border: 2px solid ${person.online ? colors.green : colors.border} }} onError={e => e.target.src = fallback}/>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 700 }}>{person.name}, {person.age}</div>
+          <div style={{ fontSize: 12, color: person.online ? colors.green : colors.muted }}>{person.online ? "● Online now" : "○ Offline"}</div>
+        </div>
+        <button onClick={() => setShowIcebreaker(true)} style={{ background: colors.surface, border: 1px solid ${colors.border}, borderRadius: 20, padding: "6px 12px", fontSize: 12, color: colors.muted, cursor: "pointer" }}>🎯</button>
+        <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: "none", border: "none", color: colors.muted, fontSize: 22, cursor: "pointer", padding: 4 }}>⋮</button>
+      </div>
+
+{/* Context menu */}
+      {menuOpen && (
+        <div style={{ position: "absolute", top: 64, right: 12, background: colors.card, border: 1px solid ${colors.border}, borderRadius: 12, zIndex: 60, minWidth: 180, boxShadow: "0 8px 24px #0006" }}>
+          {["Block","Report user","Report content","Delete conversation"].map((opt, i, arr) => (
+            <button key={opt} onClick={() => setMenuOpen(false)} style={{ display: "block", width: "100%", padding: "14px 18px", background: "none", border: "none", color: (opt === "Block" || opt === "Delete conversation") ? colors.red : colors.text, textAlign: "left", cursor: "pointer", fontSize: 15, borderBottom: i < arr.length - 1 ? 1px solid ${colors.border} : "none" }}>{opt}</button>
+          ))}
+        </div>
+      )}
+
+      {/* Messages */}
+      <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <img src={photo} alt="" style={{ width: 72, height: 72, borderRadius: "50%", objectFit: "cover", border: 3px solid ${colors.pink}, marginBottom: 8 }} onError={e => e.target.src = fallback}/>
+          <div style={{ fontWeight: 800, fontSize: 16 }}>{person.name}, {person.age}</div>
+          <div style={{ color: colors.muted, fontSize: 13 }}>{person.distance ? ${person.distance} away : person.city || ""}</div>
+        </div>
+
+        {showHello && (
+          <div style={{ background: colors.card, border: 1px solid ${colors.border}, borderRadius: 16, padding: 16, textAlign: "center", marginBottom: 16 }}>
+            <div style={{ fontSize: 28, marginBottom: 6 }}>💬</div>
+            <div style={{ fontWeight: 700, marginBottom: 4 }}>Do you want to meet them?</div>
+            <div style={{ color: colors.muted, fontSize: 13, marginBottom: 12 }}>Take the first step!</div>
+            <button style={{ background: colors.gold, border: "none", borderRadius: 20, padding: "10px 28px", fontWeight: 700, cursor: "pointer", fontSize: 14 }} onClick={() => send("Hello! 👋")}>SAY "HELLO" 👋</button>
+          </div>
+        )}
+
+        {messages.map(m => (
+          <div key={m.id} style={{ display: "flex", justifyContent: m.from === "me" ? "flex-end" : "flex-start", marginBottom: 10, alignItems: "flex-end", gap: 6 }}>
+            {m.from === "them" && <img src={photo} alt="" style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover" }} onError={e => e.target.src = fallback}/>}
+            <div style={{ background: m.from === "me" ? linear-gradient(135deg, ${colors.pink}, ${colors.pinkDark}) : colors.surface, color: "#fff", borderRadius: m.from === "me" ? "18px 18px 4px 18px" : "18px 18px 18px 4px", padding: "10px 14px", maxWidth: "70%", fontSize: 14 }}>
+              {m.text}
+              <div style={{ fontSize: 10, color: "#ffffff77", marginTop: 4, textAlign: "right" }}>{m.time} {m.from === "me" && "✓✓"}</div>
             </div>
+          </div>
+        ))}
+        <div ref={bottomRef}/>
+      </div>
+
+      {/* Icebreaker modal */}
+      {showIcebreaker && (
+        <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 80, display: "flex", alignItems: "flex-end" }}>
+          <div style={{ background: colors.card, borderRadius: "24px 24px 0 0", width: "100%", maxWidth: 430, margin: "0 auto", padding: 24 }}>
+            <div style={{ fontWeight: 700, marginBottom: 16 }}>🎯 Icebreaker Questions</div>
+            {ICEBREAKERS.map((q, i) => (
+              <button key={i} onClick={() => { setInput(q); setShowIcebreaker(false); }} style={{ display: "block", width: "100%", textAlign: "left", background: colors.surface, border: 1px solid ${colors.border}, borderRadius: 12, padding: "12px 16px", marginBottom: 8, color: colors.text, fontSize: 14, cursor: "pointer" }}>{q}</button>
+            ))}
+            <button onClick={() => setShowIcebreaker(false)} style={{ ...S.btnOutline, marginTop: 8 }}>Cancel</button>
+          </div>
         </div>
-    </div>
+      )}
 
-    <!-- LIKES VIEW -->
-    <div id="view-likes" class="app-view">
-        <div style="padding-top: 100px; text-align: center;">
-            <h3>Likes Portal Blurred</h3>
-            <button onclick="window.open('https://selar.com/h3k5rsum22')">Unlock Vault (VIP)</button>
-        </div>
-    </div>
-
-    <!-- PROFILE VIEW -->
-    <div id="view-profile" class="app-view">
-        <div class="profile-section">
-            <div style="width: 100px; height: 100px; background: #333; border-radius: 50%; margin: auto;"></div>
-            <h3>Alex, 18 ✓</h3>
-            <div class="vip-banner">
-                <h4>soulify VIP</h4>
-                <p>See Who Likes You: ✓</p>
-                <button onclick="window.open('https://selar.com/5j6778i289')">UPGRADE NOW</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- NAV -->
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="show('view-discover')">🔥</div>
-        <div class="nav-item" onclick="show('view-likes')">💎</div>
-        <div class="nav-item" onclick="show('view-chat')">💬</div>
-        <div class="nav-item" onclick="show('view-profile')">👤</div>
-    </div>
-
-    <script>
-        function show(id) {
-            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-        }
-    </script>
-</body>
-</html>
+{/* Input */}
+      <div style={{ padding: "10px 12px", background: colors.card, borderTop: 1px solid ${colors.border}, display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+        <button style={{ background: "none", border: "none", cursor: "pointer", color: colors.muted, padding: 4 }}><Icon name="camera" size={22}/></button>
+        <input value={input} onChange={e => setInput(e.target.value)} onKe
