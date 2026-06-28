@@ -1,36 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulify</title>
     <style>
-        body { background-color: #000; margin: 0; padding: 0; }
-        .page { display: none; height: 100vh; width: 100%; }
-        #discover { display: block; } /* This ensures the screen shows up! */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: #000; color: #fff; height: 100vh; overflow: hidden; }
+        
+        /* Pages */
+        .page { display: none; height: 100vh; width: 100%; position: relative; }
+        #discover { display: block; } 
+        
+        /* Header */
+        .header { height: 50px; display: flex; align-items: center; padding: 0 15px; justify-content: space-between; border-bottom: 1px solid #222; }
+        
+        /* Discover Screen Elements */
+        .profile-img { width: 100%; height: 70vh; background: #333; object-fit: cover; }
+        .info-overlay { padding: 15px; }
+        
+        /* Actions & Nav */
+        .action-row { display: flex; justify-content: center; gap: 15px; padding: 10px; }
+        .btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: #1a1a1a; color: #fff; font-size: 20px; cursor: pointer; }
+        
         .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; display: flex; justify-content: space-around; align-items: center; background: #000; border-top: 1px solid #222; }
-        .nav-icon { color: #fff; cursor: pointer; font-size: 24px; }
+        .nav-icon { font-size: 24px; cursor: pointer; color: #555; }
+        .nav-icon.active { color: #fe3c72; }
     </style>
 </head>
 <body>
 
     <!-- DISCOVER SCREEN -->
     <div id="discover" class="page">
-        <h1 style="color:white; text-align:center; padding-top:50px;">Soulify Discover</h1>
+        <div class="header"><span>✕</span><span>Soulify</span><span>⋮</span></div>
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500" class="profile-img">
+        <div class="info-overlay">
+            <h2>Luna 25 ✓</h2>
+            <p>😍 Looking for: Long-term, open to short</p>
+        </div>
+        <div class="action-row">
+            <button class="btn" onclick="alert('Rewind')">🔄</button>
+            <button class="btn" onclick="alert('Nope')">✕</button>
+            <button class="btn" onclick="alert('Super Like')">★</button>
+            <button class="btn" onclick="alert('Like')">💚</button>
+            <button class="btn" onclick="alert('Boost')">⚡</button>
+        </div>
     </div>
 
     <!-- MESSAGES SCREEN -->
     <div id="messages" class="page">
-        <h1 style="color:white; text-align:center; padding-top:50px;">Messages Screen</h1>
+        <div class="header"><span>Messages</span></div>
+        <p style="padding: 20px;">No messages yet.</p>
     </div>
 
     <!-- NAVIGATION -->
     <nav class="bottom-nav">
-        <div class="nav-icon" onclick="showPage('discover')">🔥</div>
+        <div class="nav-icon active" onclick="showPage('discover')">🔥</div>
         <div class="nav-icon" onclick="showPage('messages')">💬</div>
     </nav>
 
     <script>
         function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.getElementById(pageId).style.display = 'block';
+            document.querySelectorAll('.nav-icon').forEach(n => n.classList.remove('active'));
+            event.target.classList.add('active');
         }
     </script>
 </body>
