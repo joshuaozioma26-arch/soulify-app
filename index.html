@@ -1,38 +1,1347 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soulify</title>
-    <!-- This is the Supabase library you need -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Soulif 💞</title>
+    <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #1a1a2e;
+            --card-bg: #16213e;
+            --primary: #ff6b9d;
+            --secondary: #c44b7a;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --diamond: #b9f2ff;
+            --text: #ffffff;
+            --text-secondary: #a0a0b0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        /* ===== APP CONTAINER ===== */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 16px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b9d, #c44b7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge-display {
+            font-size: 20px;
+        }
+
+        .tier-badge {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+        }
+
+        .tier-badge.premium {
+            background: #ffd70033;
+            color: #ffd700;
+        }
+
+        .tier-badge.vip {
+            background: #9b59b633;
+            color: #9b59b6;
+        }
+
+        .tier-badge.vvip {
+            background: #00d4ff33;
+            color: #00d4ff;
+        }
+
+        /* ===== UPGRADE BANNER ===== */
+        .upgrade-banner {
+            background: linear-gradient(135deg, #ff6b9d33, #c44b7a33);
+            border: 1px solid #ff6b9d44;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upgrade-banner:active {
+            transform: scale(0.98);
+        }
+
+        .upgrade-banner-text {
+            font-size: 14px;
+        }
+
+        .upgrade-banner-text strong {
+            color: var(--gold);
+        }
+
+        .upgrade-banner-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ===== SWIPE CARDS ===== */
+        .swipe-container {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            margin-bottom: 20px;
+        }
+
+        .swipe-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: var(--card-bg);
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+.swipe-card img {
+            width: 100%;
+            height: 65%;
+            object-fit: cover;
+            background: #2a2a4a;
+        }
+
+        .swipe-card .card-info {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .swipe-card .card-info .name-age {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .swipe-card .card-info .location {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .swipe-card .card-info .bio {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        .swipe-card .card-info .tier-tag {
+            font-size: 12px;
+            margin-top: 8px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            display: inline-block;
+            width: fit-content;
+        }
+
+        /* ===== SWIPE BUTTONS ===== */
+        .swipe-actions {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 8px 0 20px;
+        }
+
+        .swipe-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .swipe-btn:active {
+            transform: scale(0.85);
+        }
+
+        .swipe-btn.pass {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .swipe-btn.like {
+            background: #2ed573;
+            color: #fff;
+        }
+
+        .swipe-btn.super {
+            background: #1e90ff;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        /* ===== LIKED YOU (Blurred for Free) ===== */
+        .liked-you-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .liked-you-section .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .liked-grid {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .liked-item {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #2a2a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .liked-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .liked-item.blurred {
+            filter: blur(8px);
+        }
+
+        .liked-item .lock-icon {
+            position: absolute;
+            font-size: 16px;
+            color: var(--gold);
+            z-index: 2;
+        }
+
+        /* ===== UPGRADE MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg);
+
+border-radius: 24px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-header h2 {
+            font-size: 22px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .plan-group {
+            margin-bottom: 20px;
+        }
+
+        .plan-group-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-group-title .badge {
+            font-size: 16px;
+        }
+
+        .plan-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .plan-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .plan-btn:active {
+            transform: scale(0.98);
+        }
+
+        .plan-btn .plan-name {
+            font-weight: 600;
+        }
+
+        .plan-btn .plan-price {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .plan-btn .plan-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .plan-btn.premium-plan {
+            border-color: #ffd70044;
+        }
+
+        .plan-btn.vip-plan {
+            border-color: #9b59b644;
+        }
+
+        .plan-btn.vvip-plan {
+            border-color: #00d4ff44;
+        }
+
+        /* ===== THEME PREVIEW ===== */
+        .theme-preview {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .theme-preview .theme-grid {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .theme-item {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-item.active {
+            border-color: var(--primary);
+        }
+
+        .theme-item.blurred {
+            filter: blur(6px);
+            pointer-events: none;
+        }
+
+        .theme-item .lock-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            color: var(--gold);
+        }
+
+        /* ===== TAB BAR ===== */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 12px;
+            z-index: 100;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 10px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px 12px;
+        }
+
+        .tab-item .tab-icon {
+            font-size: 22px;
+        }
+
+.tab-item.active {
+            color: var(--primary);
+        }
+
+        /* ===== SCREENS ===== */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* ===== GAME SCREEN ===== */
+        .game-screen {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .game-screen .game-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .game-screen .game-sub {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .game-timer {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--gold);
+            margin: 12px 0;
+        }
+
+        .game-match-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 8px 0;
+        }
+
+        .game-match-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .game-result {
+            font-size: 18px;
+            margin-top: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== LOUNGE SCREEN ===== */
+        .lounge-screen {
+            padding: 12px 0;
+        }
+
+        .lounge-screen .lounge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .lounge-screen .lounge-header h2 {
+            font-size: 22px;
+        }
+
+        .lounge-message {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+        }
+
+        .lounge-message .msg-user {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .lounge-message .msg-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .lounge-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .lounge-input input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .lounge-input button {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ===== PROFILE SCREEN ===== */
+        .profile-screen {
+            padding: 12px 0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #2a2a4a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name-tier {
+            flex: 1;
+        }
+
+        .profile-name-tier .name {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .profile-name-tier .tier-display {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+.stat-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .stat-item .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .swipe-container {
+                height: 360px;
+            }
+            .swipe-btn {
+                width: 56px;
+                height: 56px;
+                font-size: 24px;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* ===== UTILITY ===== */
+        .text-gold { color: var(--gold); }
+        .text-silver { color: var(--silver); }
+        .text-diamond { color: var(--diamond); }
+        .mt-8 { margin-top: 8px; }
+        .mb-8 { margin-bottom: 8px; }
+        .text-center { text-align: center; }
+        .flex-1 { flex: 1; }
+        .gap-8 { gap: 8px; }
+    </style>
 </head>
 <body>
 
-    <div id="main-view">
-        <h1>Welcome to Soulify</h1>
-        <button onclick="showUpgrade()">Upgrade Account</button>
+<div class="app-container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="logo">Soulif 💞</div>
+        <div class="header-actions">
+            <span class="badge-display" id="badgeDisplay">⭐</span>
+            <span class="tier-badge" id="tierBadge">Free</span>
+        </div>
     </div>
 
-    <div id="upgrade-view" style="display:none;">
-        <h1>Upgrade Page</h1>
+    <!-- ===== UPGRADE BANNER ===== -->
+    <div class="upgrade-banner" id="upgradeBanner" onclick="openUpgradeModal()">
+        <div class="upgrade-banner-text">
+            <strong>✨ Upgrade Soulif</strong><br>
+            <span style="font-size:12px; color:var(--text-secondary);">Unlock unlimited likes & more</span>
+        </div>
+        <button class="upgrade-banner-btn">Upgrade</button>
     </div>
 
-    <script>
-        // Initialize the connection to your database
-        const supabaseUrl = 'https://bzhumekesndqfnxgieuj.supabase.co';
-        const supabaseKey = 'sb_publishable_eVnd6bsnvjyN3DOLlTmspQ_WMAMBvSg';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    <!-- ===== SCREENS ===== -->
+    <div id="screenSwipe" class="screen active">
+        <!-- LIKED YOU -->
+        <div class="liked-you-section" id="likedYouSection">
+            <div class="section-title">❤️ Who Liked You</div>
+            <div class="liked-grid" id="likedGrid">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
 
-        // Telegram App initialization
-        const tg = window.Telegram.WebApp;
+        <!-- SWIPE CARDS -->
+        <div class="swipe-container" id="swipeContainer">
+            <!-- Dynamically populated -->
+        </div>
+
+        <!-- SWIPE BUTTONS -->
+        <div class="swipe-actions">
+            <button class="swipe-btn pass" onclick="swipe('pass')">✕</button>
+            <button class="swipe-btn super" onclick="swipe('super')">⭐</button>
+            <button class="swipe-btn like" onclick="swipe('like')">❤️</button>
+        </div>
+
+        <!-- THEME PREVIEW -->
+        <div class="theme-preview" id="themePreview">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:600;">🎨 Themes</span>
+                <span style="font-size:12px; color:var(--text-secondary);" id="themeCount">0 / 0</span>
+            </div>
+            <div class="theme-grid" id="themeGrid">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+<!-- ===== GAME SCREEN ===== -->
+    <div id="screenGame" class="screen">
+        <div class="game-screen">
+            <div class="game-title">🎮 SDG💞</div>
+            <div class="game-sub">Find your perfect match in 60 seconds!</div>
+            <div class="game-timer" id="gameTimer">60</div>
+            <div class="game-result" id="gameResult"></div>
+            <button class="game-match-btn" id="gameStartBtn" onclick="startGame()">Start Game</button>
+            <div style="margin-top:12px; font-size:12px; color:var(--text-secondary);">
+                ⏱️ Time remaining today: <span id="gameTimeRemaining">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LOUNGE SCREEN ===== -->
+    <div id="screenLounge" class="screen">
+        <div class="lounge-screen">
+            <div class="lounge-header">
+                <h2>👑 Private Lounge</h2>
+                <span style="font-size:12px; color:var(--text-secondary);" id="loungeAccess">🔒 VIP+ / VVIP+ only</span>
+            </div>
+            <div id="loungeMessages">
+                <div class="lounge-message">
+                    <div class="msg-user">👑 Sarah</div>
+                    <div class="msg-text">Anyone else looking for a hiking partner? 🏔️</div>
+                </div>
+                <div class="lounge-message">
+                    <div class="msg-user">💎 Mike</div>
+                    <div class="msg-text">Just got back from Paris. Who wants to hear about it? 🥐</div>
+                </div>
+                <div class="lounge-message">
+                    <div class="msg-user">👑 Emma</div>
+                    <div class="msg-text">Movie night tonight? 🎬</div>
+                </div>
+            </div>
+            <div class="lounge-input" id="loungeInput">
+                <input type="text" placeholder="Type a message..." id="loungeMsgInput" disabled>
+                <button onclick="sendLoungeMessage()" disabled>Send</button>
+            </div>
+            <div style="margin-top:12px; font-size:12px; color:var(--text-secondary); text-align:center;">
+                💎 Only VIP+ and VVIP+ can chat here
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PROFILE SCREEN ===== -->
+    <div id="screenProfile" class="screen">
+        <div class="profile-screen">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">👤</div>
+                <div class="profile-name-tier">
+                    <div class="name" id="profileName">John</div>
+                    <div class="tier-display" id="profileTier">⭐ Premium</div>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="profileLikes">0</div>
+                    <div class="stat-label">Likes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="profileMatches">0</div>
+                    <div class="stat-label">Matches</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="profileViews">0</div>
+                    <div class="stat-label">Views</div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin:12px 0;">
+                <button class="plan-btn premium-plan" onclick="openUpgradeModal()" style="flex:1; justify-content:center;">
+                    ⭐ Upgrade Premium
+                </button>
+                <button class="plan-btn vip-plan" onclick="openUpgradeModal()" style="flex:1; justify-content:center;">
+                    👑 Upgrade VIP+
+                </button>
+                <button class="plan-btn vvip-plan" onclick="openUpgradeModal()" style="flex:1; justify-content:center;">
+                    💎 Upgrade VVIP+
+                </button>
+            </div>
+
+<div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:12px; margin-top:8px;">
+                <div style="display:flex; justify-content:space-between; font-size:14px; padding:4px 0;">
+                    <span>🛡️ Badge</span>
+                    <span id="profileBadge">⭐</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:14px; padding:4px 0;">
+                    <span>🏷️ Title</span>
+                    <span id="profileTitle">Heart Hunter</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:14px; padding:4px 0;">
+                    <span>✅ Verified</span>
+                    <span id="profileVerified">❌ No</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:14px; padding:4px 0;">
+                    <span>📅 Registered</span>
+                    <span id="profileRegistered">Today</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== TAB BAR ===== -->
+<div class="tab-bar">
+    <button class="tab-item active" onclick="switchTab('swipe')">
+        <span class="tab-icon">🔥</span>
+        <span>Discover</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('game')">
+        <span class="tab-icon">🎮</span>
+        <span>Game</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('lounge')">
+        <span class="tab-icon">👑</span>
+        <span>Lounge</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('profile')">
+        <span class="tab-icon">👤</span>
+        <span>Profile</span>
+    </button>
+</div>
+
+<!-- ===== UPGRADE MODAL ===== -->
+<div class="modal-overlay" id="upgradeModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>💎 Upgrade Soulif</h2>
+            <button class="modal-close" onclick="closeUpgradeModal()">✕</button>
+        </div>
+
+        <div class="plan-group">
+            <div class="plan-group-title"><span class="badge">⭐</span> Premium</div>
+            <div class="plan-options">
+                <a href="https://selar.com/zl778w6jsi" target="_blank" class="plan-btn premium-plan">
+                    <span class="plan-name">Weekly</span>
+                    <span class="plan-price">$4.99</span>
+                </a>
+                <a href="https://selar.com/83eo7m388j" target="_blank" class="plan-btn premium-plan">
+                    <span class="plan-name">Monthly <span class="plan-label">(Save 25%)</span></span>
+                    <span class="plan-price">$14.99</span>
+                </a>
+                <a href="https://selar.com/88557ingmz" target="_blank" class="plan-btn premium-plan">
+                    <span class="plan-name">3 Months <span class="plan-label">(Save 20%)</span></span>
+                    <span class="plan-price">$39.99</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="plan-group">
+            <div class="plan-group-title"><span class="badge">👑</span> VIP+</div>
+            <div class="plan-options">
+                <a href="https://selar.com/85z5m18727" target="_blank" class="plan-btn vip-plan">
+                    <span class="plan-name">Weekly</span>
+                    <span class="plan-price">$8.99</span>
+                </a>
+                <a href="https://selar.com/8122271220" target="_blank" class="plan-btn vip-plan">
+                    <span class="plan-name">Monthly <span class="plan-label">(Save 30%)</span></span>
+                    <span class="plan-price">$24.99</span>
+                </a>
+                <a href="https://selar.com/k8b22721hn" target="_blank" class="plan-btn vip-plan">
+                    <span class="plan-name">3 Months <span class="plan-label">(Save 20%)</span></span>
+                    <span class="plan-price">$59.99</span>
+                </a>
+            </div>
+        </div>
+
+<div class="plan-group">
+            <div class="plan-group-title"><span class="badge">💎</span> VVIP+</div>
+            <div class="plan-options">
+                <a href="https://selar.com/l2oh7a61u6" target="_blank" class="plan-btn vvip-plan">
+                    <span class="plan-name">Weekly</span>
+                    <span class="plan-price">$12.99</span>
+                </a>
+                <a href="https://selar.com/555m85zift" target="_blank" class="plan-btn vvip-plan">
+                    <span class="plan-name">Monthly <span class="plan-label">(Save 35%)</span></span>
+                    <span class="plan-price">$34.99</span>
+                </a>
+                <a href="https://selar.com/146f885012" target="_blank" class="plan-btn vvip-plan">
+                    <span class="plan-name">3 Months <span class="plan-label">(Save 20%)</span></span>
+                    <span class="plan-price">$89.99</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // 1. TELEGRAM WEBAPP INIT
+    // ============================================================
+    const tg = window.Telegram?.WebApp;
+
+    if (tg) {
         tg.ready();
+        tg.expand();
+        tg.enableClosingConfirmation();
+    }
 
-        function showUpgrade() {
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('upgrade-view').style.display = 'block';
+    // ============================================================
+    // 2. STATE
+    // ============================================================
+    const state = {
+        user: {
+            id: 123456,
+            name: 'John',
+            age: 25,
+            tier: 'free', // 'free' | 'premium' | 'vip' | 'vvip'
+            badge: '',
+            likes: 50,
+            superLikes: 1,
+            gameTimeUsed: 0,
+            gameTimeLimit: 0,
+            isVerified: false,
+            title: 'Heart Hunter',
+            registered: 'Today'
+        },
+        profiles: [
+            { id: 1, name: 'Sarah', age: 24, city: 'Lagos', bio: 'Coffee lover ☕', photo: '', tier: 'vip' },
+            { id: 2, name: 'Mike', age: 27, city: 'Abuja', bio: 'Fitness junkie 💪', photo: '', tier: 'premium' },
+            { id: 3, name: 'Emma', age: 23, city: 'Port Harcourt', bio: 'Bookworm 📚', photo: '', tier: 'free' },
+            { id: 4, name: 'David', age: 29, city: 'Ibadan', bio: 'Tech nerd 👨‍💻', photo: '', tier: 'vvip' },
+            { id: 5, name: 'Grace', age: 26, city: 'Enugu', bio: 'Foodie 🍕', photo: '', tier: 'vip' },
+        ],
+        currentIndex: 0,
+        likedUsers: [
+            { id: 101, name: 'Tolu', blurred: true },
+            { id: 102, name: 'Ade', blurred: true },
+            { id: 103, name: 'Ngozi', blurred: true },
+        ],
+        themes: [
+            { id: 'gold', name: 'Gold', color: '#ffd700', locked: false },
+            { id: 'silver', name: 'Silver', color: '#c0c0c0', locked: false },
+            { id: 'rose', name: 'Rose Gold', color: '#e8a8b0', locked: true },
+            { id: 'royal', name: 'Royal Purple', color: '#6a0dad', locked: true },
+            { id: 'diamond', name: 'Diamond', color: '#b9f2ff', locked: true },
+        ],
+        gameActive: false,
+        gameTimer: 60,
+        gameInterval: null,
+        currentTab: 'swipe',
+    };
+
+    // ============================================================
+    // 3. TIER CONFIGURATION
+    // ============================================================
+    const TIERS = {
+        free: {
+            label: 'Free',
+            badge: '',
+            badgeEmoji: '🔓',
+            likes: 50,
+            superLikes: 1,
+            gameTime: 0,
+            ads: true,
+            themes: 0,
+            lounge: false,
+            verified: false,
+        },
+        premium: {
+            label: 'Premium',
+            badge: '⭐',
+            badgeEmoji: '⭐',
+
+likes: Infinity,
+            superLikes: 5,
+            gameTime: 30,
+            ads: false,
+            themes: 3,
+            lounge: false,
+            verified: false,
+            title: '⭐ Star Member'
+        },
+        vip: {
+            label: 'VIP+',
+            badge: '👑',
+            badgeEmoji: '👑',
+            likes: Infinity,
+            superLikes: 5,
+            gameTime: 120,
+            ads: false,
+            themes: 10,
+            lounge: true,
+            verified: false,
+            title: '👑 Royal Elite'
+        },
+        vvip: {
+            label: 'VVIP+',
+            badge: '💎',
+            badgeEmoji: '💎',
+            likes: Infinity,
+            superLikes: 10,
+            gameTime: Infinity,
+            ads: false,
+            themes: Infinity,
+            lounge: true,
+            verified: true,
+            title: '💎 Diamond Elite'
         }
-    </script>
-</body>
-</html>
+    };
+
+    // ============================================================
+    // 4. RENDER FUNCTIONS
+    // ============================================================
+    function renderSwipeCards() {
+        const container = document.getElementById('swipeContainer');
+        const profiles = state.profiles;
+        const idx = state.currentIndex;
+
+        if (idx >= profiles.length) {
+            container.innerHTML = 
+                <div class="swipe-card" style="display:flex; align-items:center; justify-content:center; text-align:center; padding:20px;">
+                    <div>
+                        <div style="font-size:48px; margin-bottom:12px;">🎉</div>
+                        <div style="font-size:20px; font-weight:700;">You've seen everyone!</div>
+                        <div style="font-size:14px; color:var(--text-secondary); margin-top:8px;">Come back later for more profiles</div>
+                    </div>
+                </div>
+            ;
+            return;
+        }
+
+        const profile = profiles[idx];
+        const tierInfo = TIERS[profile.tier] || TIERS.free;
+        const badgeEmoji = tierInfo.badgeEmoji || '';
+
+        container.innerHTML = 
+            <div class="swipe-card" id="activeCard">
+                <img src="${profile.photo || 'https://via.placeholder.com/400x300/2a2a4a/ffffff?text=' + profile.name}" alt="${profile.name}">
+                <div class="card-info">
+                    <div class="name-age">${profile.name}, ${profile.age} ${badgeEmoji}</div>
+                    <div class="location">📍 ${profile.city}</div>
+                    <div class="bio">${profile.bio}</div>
+                    <div class="tier-tag">${tierInfo.label}</div>
+                </div>
+            </div>
+        ;
+    }
+
+    function renderLikedYou() {
+        const grid = document.getElementById('likedGrid');
+        const tier = state.user.tier;
+        const canSee = tier === 'premium'  tier === 'vip'  tier === 'vvip';
+
+        grid.innerHTML = state.likedUsers.map(user => {
+            const blurred = !canSee;
+            return 
+                <div class="liked-item ${blurred ? 'blurred' : ''}">
+                    ${blurred ? '<span class="lock-icon">🔒</span>' : '❤️'}
+                </div>
+            ;
+        }).join('');
+
+        if (!canSee) {
+            grid.innerHTML += 
+                <div style="width:100%; text-align:center; font-size:12px; color:var(--gold); padding:8px 0;">
+                    ⭐ Upgrade to see who liked you
+                </div>
+            ;
+        }
+    }
+
+    function renderThemes() {
+        const grid = document.getElementById('themeGrid');
+        const tier = state.user.tier;
+        const tierConfig = TIERS[tier];
+        const maxThemes = tierConfig.themes || 0;
+
+        document.getElementById('themeCount').textContent = ${Math.min(maxThemes, state.themes.length)} / ${state.themes.length};
+
+grid.innerHTML = state.themes.map((theme, index) => {
+            const locked = index >= maxThemes;
+            return 
+                <div class="theme-item ${locked ? 'blurred' : ''} ${!locked ? 'active' : ''}" 
+                     style="background:${theme.color};">
+                    ${locked ? '<span class="lock-overlay">🔒</span>' : ''}
+                </div>
+            ;
+        }).join('');
+    }
+
+    function renderProfile() {
+        const user = state.user;
+        const tierConfig = TIERS[user.tier] || TIERS.free;
+
+        document.getElementById('profileName').textContent = user.name || 'User';
+        document.getElementById('profileTier').textContent = tierConfig.label;
+        document.getElementById('profileLikes').textContent = tierConfig.likes === Infinity ? '∞' : tierConfig.likes;
+        document.getElementById('profileMatches').textContent = Math.floor(Math.random() * 20) + 1; // Mock data
+        document.getElementById('profileViews').textContent = Math.floor(Math.random() * 100) + 10; // Mock data
+        document.getElementById('profileBadge').textContent = tierConfig.badgeEmoji || '🔓';
+        document.getElementById('profileTitle').textContent = tierConfig.title || 'No Title';
+        document.getElementById('profileVerified').textContent = tierConfig.verified ? '✅ Yes' : '❌ No';
+        document.getElementById('profileRegistered').textContent = user.registered || 'Today';
+        document.getElementById('profileAvatar').innerHTML = user.photo ? <img src="${user.photo}"> : '👤';
+
+        // Update header
+        document.getElementById('badgeDisplay').textContent = tierConfig.badgeEmoji || '🔓';
+        document.getElementById('tierBadge').textContent = tierConfig.label;
+        document.getElementById('tierBadge').className = tier-badge ${user.tier};
+    }
+
+    function renderGame() {
+        const tier = state.user.tier;
+        const tierConfig = TIERS[tier] || TIERS.free;
+        const maxTime = tierConfig.gameTime || 0;
+        const used = state.user.gameTimeUsed || 0;
+        const remaining = maxTime === Infinity ? '∞' : Math.max(0, maxTime - used);
+
+        document.getElementById('gameTimeRemaining').textContent = remaining + ' min';
+        document.getElementById('gameStartBtn').disabled = (maxTime === 0 || (maxTime !== Infinity && used >= maxTime));
+    }
+
+    function renderUpgradeBanner() {
+        const banner = document.getElementById('upgradeBanner');
+        const tier = state.user.tier;
+        if (tier === 'vvip') {
+            banner.style.display = 'none';
+        } else {
+            banner.style.display = 'flex';
+        }
+    }
+
+    function renderLounge() {
+        const tier = state.user.tier;
+        const canAccess = tier === 'vip' || tier === 'vvip';
+        const input = document.getElementById('loungeMsgInput');
+        const sendBtn = document.querySelector('#loungeInput button');
+        const accessLabel = document.getElementById('loungeAccess');
+
+        if (canAccess) {
+            input.disabled = false;
+            sendBtn.disabled = false;
+            accessLabel.textContent = '👑 Welcome to the Lounge!';
+            accessLabel.style.color = 'var(--gold)';
+        } else {
+            input.disabled = true;
+            sendBtn.disabled = true;
+            accessLabel.textContent = '🔒 VIP+ / VVIP+ only';
+            accessLabel.style.color = 'var(--text-secondary)';
+        }
+    }
+
+    function renderAll() {
+        renderSwipeCards();
+        renderLikedYou();
+        renderThemes();
+        renderProfile();
+        renderGame();
+        renderUpgradeBanner();
+        renderLounge();
+    }
+
+    // ============================================================
+    // 5. ACTIONS
+    // ============================================================
+    function swipe(action) {
+        const idx = state.currentIndex;
+        if (idx >= state.profiles.length) return;
+
+        const profile = state.profiles[idx];
+        const tier = state.user.tier;
+        const tierConfig = TIERS[tier];
+
+if (action === 'like') {
+            // Check like limit
+            if (tierConfig.likes !== Infinity && state.user.likes <= 0) {
+                alert('⏰ You\'ve run out of likes for today! Upgrade to Premium for unlimited likes.');
+                return;
+            }
+            if (tierConfig.likes !== Infinity) {
+                state.user.likes--;
+            }
+            // Mock match chance
+            if (Math.random() < 0.3) {
+                alert(💕 You matched with ${profile.name}!);
+            }
+        }
+
+        if (action === 'super') {
+            if (state.user.superLikes <= 0) {
+                alert('⭐ You\'ve run out of Super Likes! Upgrade for more.');
+                return;
+            }
+            state.user.superLikes--;
+            alert(⭐ Super Liked ${profile.name}!);
+        }
+
+        state.currentIndex++;
+        renderSwipeCards();
+        renderLikedYou();
+        renderProfile();
+        renderGame();
+    }
+
+    // ============================================================
+    // 6. GAME
+    // ============================================================
+    function startGame() {
+        if (state.gameActive) return;
+
+        const tier = state.user.tier;
+        const tierConfig = TIERS[tier];
+        const maxTime = tierConfig.gameTime || 0;
+        const used = state.user.gameTimeUsed || 0;
+
+        if (maxTime === 0 || (maxTime !== Infinity && used >= maxTime)) {
+            const msg = tier === 'free' 
+                ? '⏰ Free users cannot play. ⭐ Upgrade to Premium to play 30 minutes daily!'
+                : tier === 'premium'
+                ? '⏰ You\'ve used your 30 minutes today. 👑 Upgrade to VIP+ for 2 hours!'
+                : tier === 'vip'
+                ? '⏰ You\'ve used your 2 hours today. 💎 Upgrade to VVIP+ for UNLIMITED play!'
+                : '⏰ You\'ve reached your limit. Upgrade for more time!';
+            alert(msg);
+            return;
+        }
+
+        state.gameActive = true;
+        state.gameTimer = 60;
+        document.getElementById('gameStartBtn').disabled = true;
+        document.getElementById('gameResult').textContent = '';
+
+        state.gameInterval = setInterval(() => {
+            state.gameTimer--;
+            document.getElementById('gameTimer').textContent = state.gameTimer;
+
+            if (state.gameTimer <= 0) {
+                clearInterval(state.gameInterval);
+                state.gameActive = false;
+                document.getElementById('gameStartBtn').disabled = false;
+                const matches = Math.floor(Math.random() * 5) + 1;
+                document.getElementById('gameResult').textContent = 🎉 You found ${matches} match${matches > 1 ? 'es' : ''}!;
+                state.user.gameTimeUsed += 1;
+                renderGame();
+            }
+        }, 1000);
+    }
+
+    // ============================================================
+    // 7. LOUNGE
+    // ============================================================
+    function sendLoungeMessage() {
+        const input = document.getElementById('loungeMsgInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        const container = document.getElementById('loungeMessages');
+        const div = document.createElement('div');
+        div.className = 'lounge-message';
+        div.innerHTML = 
+            <div class="msg-user">👤 You (${TIERS[state.user.tier]?.badgeEmoji || '🔓'})</div>
+            <div class="msg-text">${msg}</div>
+        ;
+        container.appendChild(div);
+        input.value = '';
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // ============================================================
+    // 8. TABS
+    // ============================================================
+    function switchTab(tab) {
+        state.currentTab = tab;
+        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
